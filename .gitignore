@@ -128,3 +128,4 @@ venv.bak/
 
 # data
 pubmed-rct/PubMed_200k_RCT/*.json
+output/*
