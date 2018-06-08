@@ -3,21 +3,6 @@
 Detecting claim from scientific publication using discourse and sentence embedding.
 
 
-## Download Dataset
-
-You can preprocess [Pubmed RCT](https://github.com/Franck-Dernoncourt/pubmed-rct) file
-using `spacy` by running `python preprocess.py`
-(note that you have to put `train.txt`, `test.txt` in `pubmed-rct/PubMed_200k_RCT/`)
-or alternatively download JSON directly from Amazon S3.
-
-```bash
-wget https://s3-us-west-2.amazonaws.com/pubmed-rct/train.json -P pubmed-rct/PubMed_200k_RCT/
-wget https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json -P pubmed-rct/PubMed_200k_RCT/
-```
-
-The dataset is not necessary for discourse training since we point to Amazon S3 directly.
-
-
 ## Training discourse model
 
 Running AllenNLP to train discourse model as follows
@@ -32,9 +17,11 @@ or
 allennlp train pubmed_rct.json -s output --include-package discourse
 ```
 
+We point data location to Amazon S3 directly in `pubmed_rct.json`
+so you do not need to download the data locally. Change `cuda_device` to `0` in  
+`pubmed_rct.json` if you want to run on GPU.
 
-**Note** that you have to remove `output` folder first before running. `pubmed_rct.json`
-contains parameters for the model, change `cuda_device` to `0` if you want to run on GPU.
+**Note** that you have to remove `output` folder first before running.
 
 
 ## Predicting claim
