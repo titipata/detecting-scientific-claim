@@ -14,8 +14,7 @@ class DiscourseClassifierPredictor(Predictor):
     @overrides
     def _json_to_instance(self, json_dict: JsonDict) -> Tuple[Instance, JsonDict]:
         sentence = json_dict['sentence']
-        pos = json_dict['pos']
-        instance = self._dataset_reader.text_to_instance(sent=sentence, pos=pos)
+        instance = self._dataset_reader.text_to_instance(sent=sentence)
 
         # label_dict will be like {0: "ACL", 1: "AI", ...}
         label_dict = self._model.vocab.get_index_to_token_vocabulary('labels')

@@ -22,25 +22,17 @@
       "num_layers": 1,
       "dropout": 0.2
     },
-    "pos_encoder": {
-      "type": "lstm",
-      "bidirectional": true,
-      "input_size": 100,
-      "hidden_size": 100,
-      "num_layers": 1,
-      "dropout": 0.2
-    },
     "classifier_feedforward": {
-      "input_dim": 400,
+      "input_dim": 200,
       "num_layers": 2,
-      "hidden_dims": [200, 3],
+      "hidden_dims": [100, 5],
       "activations": ["relu", "linear"],
       "dropout": [0.2, 0.0]
     }
   },
   "iterator": {
     "type": "bucket",
-    "sorting_keys": [["sentence", "num_tokens"], ["pos", "num_tokens"]],
+    "sorting_keys": [["sentence", "num_tokens"]],
     "batch_size": 64
   },
   "trainer": {

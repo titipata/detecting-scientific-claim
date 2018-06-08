@@ -46,21 +46,16 @@ class PubmedRCTReader(DatasetReader):
                 example = json.loads(line)
                 label = example["label"]
                 sent = example["sentence"]
-                pos = example["pos"]
-                yield self.text_to_instance(sent, pos, label)
+                yield self.text_to_instance(sent, label)
 
     @overrides
     def text_to_instance(self,
                          sent: list,
-                         pos: list,
                          label: str = None) -> Instance:
         fields: Dict[str, Field] = {}
         sent_tokens = [Token(t) for t in sent]
-        pos_tokens = [Token(p) for p in pos]
         fields['sentence'] = TextField(sent_tokens, self._token_indexers)
-        fields['pos'] = TextField(pos_tokens, self._token_indexers)
-        if label:
-            fields['label'] = LabelField(label)
+        fields['label'] = LabelField(label)
         return Instance(fields)
 
     @classmethod

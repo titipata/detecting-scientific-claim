@@ -22,7 +22,6 @@ class DiscourseClassifier(Model):
                  vocab: Vocabulary,
                  text_field_embedder: TextFieldEmbedder,
                  sentence_encoder: Seq2VecEncoder,
-                 pos_encoder: Seq2VecEncoder,
                  classifier_feedforward: FeedForward,
                  initializer: InitializerApplicator = InitializerApplicator(),
                  regularizer: Optional[RegularizerApplicator] = None) -> None:
@@ -31,11 +30,10 @@ class DiscourseClassifier(Model):
         self.text_field_embedder = text_field_embedder
         self.num_classes = self.vocab.get_vocab_size("labels")
         self.sentence_encoder = sentence_encoder
-        self.pos_encoder = pos_encoder
         self.classifier_feedforward = classifier_feedforward
         self.metrics = {
-                "accuracy": CategoricalAccuracy(),
-                "accuracy3": CategoricalAccuracy(top_k=3)
+            "accuracy": CategoricalAccuracy(),
+            "accuracy3": CategoricalAccuracy(top_k=3)
         }
         self.loss = torch.nn.CrossEntropyLoss()
         initializer(self)
@@ -43,17 +41,12 @@ class DiscourseClassifier(Model):
     @overrides
     def forward(self,
                 sentence: Dict[str, torch.LongTensor],
-                pos: Dict[str, torch.LongTensor],
                 label: torch.LongTensor = None) -> Dict[str, torch.Tensor]:
         embedded_sentence = self.text_field_embedder(sentence)
         sentence_mask = util.get_text_field_mask(sentence)
         encoded_sentence = self.sentence_encoder(embedded_sentence, sentence_mask)
 
-        embedded_pos = self.text_field_embedder(pos)
-        pos_mask = util.get_text_field_mask(pos)
-        encoded_pos = self.pos_encoder(embedded_pos, pos_mask)
-
-        logits = self.classifier_feedforward(torch.cat([encoded_sentence, encoded_pos], dim=-1))
+        logits = self.classifier_feedforward(encoded_sentence)
         class_probabilities = F.softmax(logits)
 
         output_dict = {"class_probabilities": class_probabilities}
@@ -87,7 +80,6 @@ class DiscourseClassifier(Model):
         embedder_params = params.pop("text_field_embedder")
         text_field_embedder = TextFieldEmbedder.from_params(vocab, embedder_params)
         sentence_encoder = Seq2VecEncoder.from_params(params.pop("sentence_encoder"))
-        pos_encoder = Seq2VecEncoder.from_params(params.pop("pos_encoder"))
         classifier_feedforward = FeedForward.from_params(params.pop("classifier_feedforward"))
 
         initializer = InitializerApplicator.from_params(params.pop('initializer', []))
@@ -96,7 +88,6 @@ class DiscourseClassifier(Model):
         return cls(vocab=vocab,
                    text_field_embedder=text_field_embedder,
                    sentence_encoder=sentence_encoder,
-                   pos_encoder=pos_encoder,
                    classifier_feedforward=classifier_feedforward,
                    initializer=initializer,
                    regularizer=regularizer)
