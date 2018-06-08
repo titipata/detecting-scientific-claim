@@ -30,8 +30,8 @@ class DiscourseClassifier(Model):
 
         self.text_field_embedder = text_field_embedder
         self.num_classes = self.vocab.get_vocab_size("labels")
-        self.title_encoder = title_encoder
-        self.abstract_encoder = abstract_encoder
+        self.sentence_encoder = sentence_encoder
+        self.pos_encoder = pos_encoder
         self.classifier_feedforward = classifier_feedforward
         self.metrics = {
                 "accuracy": CategoricalAccuracy(),
@@ -47,11 +47,11 @@ class DiscourseClassifier(Model):
                 label: torch.LongTensor = None) -> Dict[str, torch.Tensor]:
         embedded_sentence = self.text_field_embedder(sentence)
         sentence_mask = util.get_text_field_mask(sentence)
-        encoded_sentence = self.title_encoder(embedded_sentence, sentence_mask)
+        encoded_sentence = self.sentence_encoder(embedded_sentence, sentence_mask)
 
         embedded_pos = self.text_field_embedder(pos)
         pos_mask = util.get_text_field_mask(pos)
-        encoded_pos = self.abstract_encoder(v, abstract_mask)
+        encoded_pos = self.pos_encoder(embedded_pos, pos_mask)
 
         logits = self.classifier_feedforward(torch.cat([encoded_sentence, encoded_pos], dim=-1))
         class_probabilities = F.softmax(logits)

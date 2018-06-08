@@ -25,7 +25,7 @@
     "pos_encoder": {
       "type": "lstm",
       "bidirectional": true,
-      "input_size": 50,
+      "input_size": 100,
       "hidden_size": 100,
       "num_layers": 1,
       "dropout": 0.2

@@ -26,6 +26,13 @@ Running AllenNLP to train discourse model as follows
 python -m allennlp.run train pubmed_rct.json -s output --include-package discourse
 ```
 
+or
+
+```bash
+allennlp train pubmed_rct.json -s output --include-package discourse
+```
+
+
 **Note** that you have to remove `output` folder first before running. `pubmed_rct.json`
 contains parameters for the model, change `cuda_device` to `0` if you want to run on GPU.
 
