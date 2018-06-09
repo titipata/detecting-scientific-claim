@@ -38,6 +38,17 @@ and run web service for discourse prediction task as follow
 bash web_service.sh
 ```
 
+or simply run the following to predict labels
+
+
+```bash
+allennlp predict \
+    static_html/model.tar.gz \
+    pubmed-rct/PubMed_200k_RCT/fixtures.json \
+    --include-package discourse \
+    --predictor discourse_classifier
+```
+
 
 ## Predicting claim
 

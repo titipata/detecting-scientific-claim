@@ -49,8 +49,8 @@ class DiscourseClassifier(Model):
         logits = self.classifier_feedforward(encoded_sentence)
         class_probabilities = F.softmax(logits)
 
-        output_dict = {"class_probabilities": class_probabilities}
-
+        output_dict = {'class_probabilities': class_probabilities}
+        output_dict = {'logits': logits}
         if label is not None:
             loss = self.loss(logits, label.squeeze(-1))
             for metric in self.metrics.values():
@@ -61,12 +61,12 @@ class DiscourseClassifier(Model):
 
     @overrides
     def decode(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
-        class_probabilities = F.softmax(output_dict['logits'], dim=-1)
+        class_probabilities = F.softmax(output_dict['logits'])
         output_dict['class_probabilities'] = class_probabilities
 
         predictions = class_probabilities.cpu().data.numpy()
         argmax_indices = np.argmax(predictions, axis=-1)
-        labels = [self.vocab.get_token_from_index(x, namespace="labels")
+        labels = [self.vocab.get_token_from_index(x, namespace='labels')
                   for x in argmax_indices]
         output_dict['label'] = labels
         return output_dict
@@ -77,10 +77,10 @@ class DiscourseClassifier(Model):
 
     @classmethod
     def from_params(cls, vocab: Vocabulary, params: Params) -> 'DiscourseClassifier':
-        embedder_params = params.pop("text_field_embedder")
+        embedder_params = params.pop('text_field_embedder')
         text_field_embedder = TextFieldEmbedder.from_params(vocab, embedder_params)
-        sentence_encoder = Seq2VecEncoder.from_params(params.pop("sentence_encoder"))
-        classifier_feedforward = FeedForward.from_params(params.pop("classifier_feedforward"))
+        sentence_encoder = Seq2VecEncoder.from_params(params.pop('sentence_encoder'))
+        classifier_feedforward = FeedForward.from_params(params.pop('classifier_feedforward'))
 
         initializer = InitializerApplicator.from_params(params.pop('initializer', []))
         regularizer = RegularizerApplicator.from_params(params.pop('regularizer', []))

@@ -22,4 +22,4 @@ class DiscourseClassifierPredictor(Predictor):
         # Convert it to list ["RESULTS", "METHODS", "CONCLUSIONS", "BACKGROUND", "OBJECTIVE"]
         all_labels = [label_dict[i] for i in range(len(label_dict))]
 
-        return instance, {"all_labels": all_labels}
+        return instance, {'all_labels': all_labels}
