@@ -24,6 +24,21 @@ so you do not need to download the data locally. Change `cuda_device` to `0` in
 **Note** that you have to remove `output` folder first before running.
 
 
+## Web service
+
+You can download trained model
+
+```bash
+wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz -P static_html/
+```
+
+and run web service for discourse prediction task as follow
+
+```bash
+bash web_service.sh
+```
+
+
 ## Predicting claim
 
 We will release a dataset of scientific claims tagged by expert soon (in few months).
