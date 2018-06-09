@@ -29,7 +29,7 @@ if you want to run on CPU.
 You can download trained model
 
 ```bash
-wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz -P static_html/
+wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz
 ```
 
 and run web service for discourse prediction task as follow
@@ -38,12 +38,13 @@ and run web service for discourse prediction task as follow
 bash web_service.sh
 ```
 
-or simply run the following to predict labels
+To test the train model with provided examples [`fixtures.json`](pubmed-rct/PubMed_200k_RCT/fixtures.json),
+simply run the following to predict labels.
 
 
 ```bash
 allennlp predict \
-    static_html/model.tar.gz \
+    model.tar.gz \
     pubmed-rct/PubMed_200k_RCT/fixtures.json \
     --include-package discourse \
     --predictor discourse_classifier

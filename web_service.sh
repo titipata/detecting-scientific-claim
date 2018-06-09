@@ -1,6 +1,6 @@
 python -m allennlp.service.server_simple \
-    --archive-path static_html/model.tar.gz \
-    --predictor discourse \
+    --archive-path model.tar.gz \
+    --predictor discourse_classifier \
     --include-package discourse \
     --title "Discourse Prediction" \
-    --field-name sentences
+    --field-name sentence
