@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>
-            Academic Paper Classifier
+            Discourse Prediction
         </title>
         <link rel = "stylesheet" type = "text/css" href = "demo.css" />
     </head>
@@ -42,7 +42,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
     <script>
     function predict() {
-        var quotedFieldList = ['sentences'];
+        var quotedFieldList = ['sentences_text'];
         var data = {};
         quotedFieldList.forEach(function(fieldName) {
             data[fieldName] = document.getElementById("input-" + fieldName).value;
@@ -64,8 +64,7 @@
                     data: {
                         labels: response['all_labels'],
                         datasets: [{
-                            data: response['class_probabilities'],
-                            backgroundColor: ['red', 'green', 'blue']
+                            data: response['class_probabilities']
                         }]
                     }
                 });

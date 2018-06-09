@@ -18,8 +18,8 @@ class PubmedRCTReader(DatasetReader):
     Reads a file from Pubmed RCT dataset. We preprocess Pubmed RCT to JSON format
     where each line is a dictionary of
         - `label` - label of the sentence
-        - `sentence` - tokenized words in sentence
-        - `pos` - tokenized part-of-speech
+        - `sentence` - list of tokenized words of a sentence
+        - `pos` - list of tokenized part-of-speech tags
         - `sentence_text` - full text of the sentence
 
     Parameters
@@ -44,18 +44,19 @@ class PubmedRCTReader(DatasetReader):
         with open(file_path, 'r') as file:
             for line in file:
                 example = json.loads(line)
-                label = example["label"]
-                sent = example["sentence"]
+                label = example['label']
+                sent = example['sentence_text']
                 yield self.text_to_instance(sent, label)
 
     @overrides
     def text_to_instance(self,
-                         sent: list,
+                         sent: str,
                          label: str = None) -> Instance:
         fields: Dict[str, Field] = {}
-        sent_tokens = [Token(t) for t in sent]
-        fields['sentence'] = TextField(sent_tokens, self._token_indexers)
-        fields['label'] = LabelField(label)
+        tokenized_sent = self._tokenizer.tokenize(sent)
+        fields['sentence'] = TextField(tokenized_sent, self._token_indexers)
+        if label is not None:
+            fields['label'] = LabelField(label)
         return Instance(fields)
 
     @classmethod

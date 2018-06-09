@@ -1,2 +1,8 @@
+# pytorch library
+torch>=0.4.0
+
+# model
 allennlp
-pytorch
+
+# tokenization
+spacy>=2.0

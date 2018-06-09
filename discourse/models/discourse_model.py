@@ -16,7 +16,7 @@ from allennlp.nn import util
 from allennlp.training.metrics import CategoricalAccuracy
 
 
-@Model.register("discourse")
+@Model.register("discourse_classifier")
 class DiscourseClassifier(Model):
     def __init__(self,
                  vocab: Vocabulary,

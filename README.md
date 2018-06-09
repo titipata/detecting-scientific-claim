@@ -18,8 +18,8 @@ allennlp train pubmed_rct.json -s output --include-package discourse
 ```
 
 We point data location to Amazon S3 directly in `pubmed_rct.json`
-so you do not need to download the data locally. Change `cuda_device` to `0` in  
-`pubmed_rct.json` if you want to run on GPU.
+so you do not need to download the data locally. Change `cuda_device` to `-1` in `pubmed_rct.json`
+if you want to run on CPU.
 
 **Note** that you have to remove `output` folder first before running.
 
