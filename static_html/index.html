@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>
+            Discourse Classifier
+        </title>
+        <link rel = "stylesheet" type = "text/css" href = "demo.css" />
+    </head>
+    <body>
+        <div class="pane-container">
+            <div class="pane model">
+                <div class="pane__left model__input">
+                    <div class="model__content">
+                        <h2><span>Discourse Classifier</span></h2>
+                        <div class="model__content">
+
+                            <div class="form__field">
+                                <label for="input-sentence">sentence</label>
+                                <input type="text" id="input-sentence" type="text" required value placeholder="input sentence here">
+                            </div>
+
+                            <div class="form__field form__field--btn">
+                                <button type="button" class="btn btn--icon-disclosure" onclick="predict()">Predict</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pane__right model__output model__output--empty">
+                    <div class="pane__thumb"></div>
+                    <div class="model__content">
+                        <div id="output" class="output">
+                            <div class="placeholder">
+                                <div class="placeholder__content">
+                                    <p>Run model to view results</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+    <script>
+    function predict() {
+        var quotedFieldList = ['sentence'];
+        var data = {};
+        quotedFieldList.forEach(function(fieldName) {
+            data[fieldName] = document.getElementById("input-" + fieldName).value;
+        })
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                var canvas = '<canvas id="myChart" width="400" height="400"></canvas>';
+                document.getElementById("output").innerHTML = canvas;
+
+                var response = JSON.parse(xhr.responseText);
+
+                var ctx = document.getElementById("myChart");
+                var pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: response['all_labels'],
+                        datasets: [{
+                            data: response['class_probabilities'],
+                            backgroundColor: ['#ee4035', '#fdf498', '#f37736', "#7bc043", "#0392cf"]
+                        }]
+                    }
+                });
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+    </script>
+</html>
