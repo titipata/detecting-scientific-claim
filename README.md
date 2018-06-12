@@ -53,12 +53,25 @@ allennlp predict \
 
 ## Predicting claim
 
+First, download fastText pre-trained word vector and unzip it, put in this folder
+
+```bash
+wget https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
+```
+
 You can test running `flask` app to detect the claim as follows
 
-```
+```bash
 export FLASK_APP=main.py
 flask run --host=0.0.0.0 --port 5000
 ```
+
+The interface will look something like this
+
+<p float="left">
+  <img src="static/interface.png" width="600" />
+</p>
+
 
 We will release a dataset and model of scientific claims tagged by expert soon (in few months).
 

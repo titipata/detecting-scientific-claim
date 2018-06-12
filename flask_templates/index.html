@@ -55,11 +55,11 @@
         <!-- splited sentence -->
         {% if score > 50 %}
         <div class="rightTxt">
-          <b>{{sent}} [{{ label }}] </b>
+          <b>{{sent}} <button type="button" class="btn btn-dark">{{ label }}</button></b>
         </div>
         {% else %}
         <div class="rightTxt">
-          {{sent}} [{{ label }}]
+          {{sent}} <button type="button" class="btn btn-dark">{{ label }}
         </div>
         {% endif %}
         </li>

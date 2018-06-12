@@ -4,33 +4,39 @@ import numpy as np
 import pandas as pd
 import flask
 from flask import Flask, request, flash
-
 from nltk import word_tokenize, sent_tokenize
-from fastText import load_model
-from sklearn.externals import joblib
 
-from discourse.predictors import DiscourseClassifierPredictor
-from discourse.dataset_readers import PubmedRCTReader
-from discourse.models import DiscourseClassifier
+TESTING = False
 
-from allennlp.models.archival import load_archive
-from allennlp.service.predictors import Predictor
-from allennlp.common.file_utils import cached_path
+if not TESTING:
+    from fastText import load_model
+    from sklearn.externals import joblib
+
+    from discourse.predictors import DiscourseClassifierPredictor
+    from discourse.dataset_readers import PubmedRCTReader
+    from discourse.models import DiscourseClassifier
+
+    from allennlp.models.archival import load_archive
+    from allennlp.service.predictors import Predictor
+    from allennlp.common.file_utils import cached_path
+
+    archive = load_archive('model.tar.gz') # discourse model
+    predictor = Predictor.from_archive(archive, 'discourse_classifier')
+
+    MEDLINE_WORD_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/medline_word_prob.json'
+    LOGIST_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/logist_model.pkl'
+    PRINCIPAL_COMP_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/principal_comp.txt'
+
+    assert os.path.exists('wiki.en.bin') == True
+    ft_model = load_model('wiki.en.bin') # fastText word vector
+    p_dict = json.load(open(cached_path(MEDLINE_WORD_PATH), 'r')) # medline word probability
+    logist_model = joblib.load(cached_path(LOGIST_PATH)) # trained logistic regression
+    pc = np.loadtxt(cached_path(PRINCIPAL_COMP_PATH)) # principal comp
 
 
 app = Flask(__name__, template_folder='flask_templates')
 app.secret_key = 'made in Thailand.'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-
-# discourse model
-archive = load_archive('model.tar.gz')
-predictor = Predictor.from_archive(archive, 'discourse_classifier')
-
-
-p_dict = json.load(open(os.path.join('medline', 'medline_word_prob.json'), 'r')) # medline word probability
-ft_model = load_model(os.path.join('medline', 'wiki.en.bin')) # fastText word vector
-logist_model = joblib.load(os.path.join('medline', 'logist_model.pkl')) # trained logistic regression
-pc = np.loadtxt(os.path.join('medline', 'principal_comp.txt')) # principal comp
 
 
 def get_sentence_vector(sent, a=10e-4):
@@ -64,24 +70,34 @@ def index():
             sentences = []
             sentences_vect = []
             labels = []
-            for sent in sent_tokenize(abstract):
-                sent_vec = get_sentence_vector(sent)
-                sent_vec = remove_pc(sent_vec, pc) # remove the first principal component
-                discourse_output = predictor.predict_json({'sentence': sent})
-                label = discourse_output['label']
-                discourse_prob = np.array(discourse_output['class_probabilities'])
-                sentence_vect = np.hstack((sent_vec, discourse_prob))
-                # sentence_vect = discourse_prob
-                sentences.append(sent)
-                sentences_vect.append(sentence_vect)
-                labels.append(label)
-            sentences_vect = np.atleast_2d(np.vstack(sentences_vect))
-            p_claims = 100 * logist_model.predict_proba(sentences_vect)[:, 1]
-            p_claims = list(p_claims)
+
+            if not TESTING:
+                for sent in sent_tokenize(abstract):
+                    sent_vec = get_sentence_vector(sent)
+                    sent_vec = remove_pc(sent_vec, pc) # remove the first principal component
+                    discourse_output = predictor.predict_json({'sentence': sent})
+                    label = discourse_output['label']
+                    discourse_prob = np.array(discourse_output['class_probabilities'])
+                    sentence_vect = np.hstack((sent_vec, discourse_prob))
+                    sentences.append(sent)
+                    sentences_vect.append(sentence_vect)
+                    labels.append(label)
+                sentences_vect = np.atleast_2d(np.vstack(sentences_vect))
+                p_claims = 100 * logist_model.predict_proba(sentences_vect)[:, 1]
+                p_claims = list(p_claims)
+            else:
+                for sent in sent_tokenize(abstract):
+                    sentences.append(sent)
+                    label = np.random.choice(['RESULTS', 'METHODS',
+                                              'CONCLUSIONS', 'BACKGROUND',
+                                              'OBJECTIVE'])
+                    labels.append(label)
+                p_claims = 100 * np.random.rand(len(sentences))
+                p_claims = list(p_claims)
         else:
             sentences = ["Check input abstract, maybe abstract doesn't exist."]
             p_claims = [0]
-            labels = ['']
+            labels = ['NO LABEL']
         data = {'sents': sentences,
                 'scores': p_claims,
                 'labels': labels,
