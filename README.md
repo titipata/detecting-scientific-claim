@@ -24,9 +24,11 @@ if you want to run on CPU.
 **Note** that you have to remove `output` folder first before running.
 
 
-## Web service
+## Predicting discourse
 
-You can download trained model
+We trained the LSTM model on structured abstracts from Pubmed to predict
+discourse (`RESULTS`, `METHODS`, `CONCLUSIONS`, `BACKGROUND`, `OBJECTIVE`)
+from a given sentence. You can download trained model from Amazon S3
 
 ```bash
 wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz
@@ -51,15 +53,16 @@ allennlp predict \
 ```
 
 
-## Predicting claim
+## Predicting claim (web service)
 
-First, download fastText pre-trained word vector and unzip it, put in this folder
+First, download fastText pre-trained word vector
 
 ```bash
 wget https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
 ```
 
-You can test running `flask` app to detect the claim as follows
+then unzip it, and put `wiki.en.bin` in this folder. Now, you can run `flask`
+application to detect claims as follows
 
 ```bash
 export FLASK_APP=main.py
@@ -73,7 +76,8 @@ The interface will look something like this
 </p>
 
 
-We will release a dataset and model of scientific claims tagged by expert soon (in few months).
+We will release a dataset and model of scientific claims tagged by expert soon
+(in a coming months).
 
 
 ## Requirements
