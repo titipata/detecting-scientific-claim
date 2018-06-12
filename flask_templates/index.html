@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find the claim!</title>
+    {% include 'head.html' %}
+</head>
+
+<body>
+
+  {% include 'nav.html' %}
+
+  <div class="container">
+
+    <form action="/" method="post">
+        <textarea
+          class="form-control"
+          rows="5" id="abstract"
+          name="text_input"
+          placeholder="Put scientific abstract or text that you want to detect claims here..."
+          value="{{ request.form.get('text_input', '') }}"></textarea>
+        </br>
+        <input type="submit" class="override-button-font center-block btn btn-warning" value="Submit" name="submitbtn">
+    </form>
+
+    </br>
+
+    {% if len(abstract) != 0 %}
+      <p>{{ abstract }}</p></br>
+    {% endif %}
+
+    {% if len(sents) != 0 %}
+      <h4><b>Prediction</b></h4>
+      </br>
+
+      <ul style="list-style: none; padding: 0;">
+      {% for i, (sent, score, label) in enumerate(zip(sents, scores, labels)) %}
+        <li>
+
+        <!-- progress bar -->
+        <div class="leftBox">
+          <div class="progress leftProgress">
+            <div class="progress-bar bg-success"
+                role="progressbar"
+                style="width: {{score}}%"
+                aria-valuenow="{{score}}"
+                aria-valuemin="0"
+                aria-valuemax="100">
+            </div>
+          </div>
+          <!-- prediction value -->
+          <div class="centerValue">
+            {{ '%0.2f' | format(score / 100) }}
+          </div>
+        </div>
+        <!-- splited sentence -->
+        {% if score > 50 %}
+        <div class="rightTxt">
+          <b>{{sent}} [{{ label }}] </b>
+        </div>
+        {% else %}
+        <div class="rightTxt">
+          {{sent}} [{{ label }}]
+        </div>
+        {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+  </div>
+
+
+</body>
+</html>

@@ -53,7 +53,14 @@ allennlp predict \
 
 ## Predicting claim
 
-We will release a dataset of scientific claims tagged by expert soon (in few months).
+You can test running `flask` app to detect the claim as follows
+
+```
+export FLASK_APP=main.py
+flask run --host=0.0.0.0 --port 5000
+```
+
+We will release a dataset and model of scientific claims tagged by expert soon (in few months).
 
 
 ## Requirements
@@ -61,3 +68,10 @@ We will release a dataset of scientific claims tagged by expert soon (in few mon
 - [Pubmed RCT](https://github.com/Franck-Dernoncourt/pubmed-rct) - dataset
 - [AllenNLP](https://github.com/allenai/allennlp)
 - [spacy](https://github.com/explosion/spaCy)
+- [fastText](https://github.com/facebookresearch/fastText)
+
+
+## Acknowledgement
+
+This project is done at the [Allen Institute for Artificial Intelligence](https://allenai.org/)
+and [Konrad Kording lab, University of Pennsylvania](http://kordinglab.com/)
