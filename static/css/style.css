@@ -19,7 +19,7 @@ body > .container {
 }
 
 .navbar-default .navbar-brand {
-    font-size: 28px; 
+    font-size: 28px;
     font-weight: 600;
 }
 
@@ -128,4 +128,34 @@ body > .container {
 
 .override-button-font {
     font-size: 1.25em;
+}
+
+.label-entity {
+    padding: .2em .3em;
+    font-size: 0.8rem;
+    margin: 0 .25em;
+    line-height: 1;
+    display: inline-block;
+    border-radius: .25em;
+    box-sizing: border-box;
+}
+
+#data-entity-background {
+    background-color: #f6f3b4;
+}
+
+#data-entity-objective {
+    background-color: #fb607f;
+}
+
+#data-entity-methods {
+    background-color: #7cb9e8;
+}
+
+#data-entity-conclusions {
+    background-color: #ffa525;
+}
+
+#data-entity-results {
+    background-color: #81ff76;
 }
