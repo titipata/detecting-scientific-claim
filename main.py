@@ -1,13 +1,18 @@
+"""
+Flask application for serving demo for detecting scientific claims
+"""
 import os
+import sys
 import json
 import numpy as np
 import pandas as pd
-import flask
-from flask import Flask, request, flash
 from nltk import word_tokenize, sent_tokenize
 
-TESTING = False
+import flask
+from flask import Flask, request
 
+
+TESTING = False # if true, run testing
 if not TESTING:
     from fastText import load_model
     from sklearn.externals import joblib
@@ -34,11 +39,6 @@ if not TESTING:
     pc = np.loadtxt(cached_path(PRINCIPAL_COMP_PATH)) # principal comp
 
 
-app = Flask(__name__, template_folder='flask_templates')
-app.secret_key = 'made in Thailand.'
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-
-
 def get_sentence_vector(sent, a=10e-4):
     """Average word vector for given list of words using fastText
 
@@ -61,6 +61,11 @@ def remove_pc(x, pc):
     """
     return x - x.dot(pc.transpose()) * pc
 
+
+app = Flask(__name__,
+            template_folder='flask_templates')
+app.secret_key = 'made in Thailand.'
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
