@@ -52,12 +52,6 @@ body > .container {
     padding-top: 0.25em;
 }
 
-.leftProgress {
-    width: auto;
-    display: block;
-    /*padding-bottom: 0.2em;*/
-}
-
 .leftBox {
     text-align: center;
     width: 6%;
