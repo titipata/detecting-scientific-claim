@@ -1,5 +1,43 @@
+/* -------------- */
+/* custom styling */
+/* -------------- */
+
 html {
-    font-family: 'helvetica neue',helvetica,arial,sans-serif;
+    /* use default font from bootstrap 4 */
+    /* font-family: 'helvetica neue', helvetica, arial, sans-serif; */
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+body > .container {
+    padding: 35px 0 15px 0;
+}
+
+.navbar-default .navbar-brand {
+    font-size: 28px; 
+    font-weight: 600;
+}
+
+.footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 70px;
+    line-height: 20px; /* Vertically center the text there */
+    background-color: #1E303C;
+    color: #fff;
+    font-size: 12px;
+}
+
+.footer > .container {
+    padding-top: 15px;
 }
 
 /* -------------- */
@@ -12,12 +50,6 @@ html {
     display: block;
     /*vertical-align: top;*/
     padding-top: 0.25em;
-}
-
-.leftProgress {
-    width: auto;
-    display: block;
-    /*padding-bottom: 0.2em;*/
 }
 
 .leftBox {
@@ -43,7 +75,6 @@ html {
     .rightTxt {
         width: 83%;
     }
-
 }
 
 /* ----------------------- */
