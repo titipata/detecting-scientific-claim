@@ -14,6 +14,15 @@ body {
     margin-bottom: 60px;
 }
 
+body > .container {
+    padding: 35px 0 15px 0;
+}
+
+.navbar-default .navbar-brand {
+    font-size: 28px; 
+    font-weight: 600;
+}
+
 .footer {
     text-align: center;
     position: absolute;
