@@ -11,8 +11,7 @@ from nltk import word_tokenize, sent_tokenize
 import flask
 from flask import Flask, request
 
-
-TESTING = False # if true, run testing
+TESTING = True # if true, run testing
 if not TESTING:
     from fastText import load_model
     from sklearn.externals import joblib

@@ -1,18 +1,14 @@
 <nav class="navbar navbar-default navbar-static-top override-nav-color">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+        <a style="font-size: 20px; font-weight:600" class="navbar-brand" href="{{ url_for('index') }}">Detecting scientific claims</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-            <a style="font-size: 20px; font-weight:600" class="navbar-brand" href="{{ url_for('index') }}">Detecting scientific claims</a>
-        </div>
 
-        <div class="collapse navbar-collapse" id="navbar">
-          <ul class="nav navbar-nav navbar-right override-navtext-color">
-          </ul>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav navbar-right override-navtext-color">
+            </ul>
         </div>
     </div>
 </nav>
