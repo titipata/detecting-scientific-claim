@@ -24,7 +24,7 @@ if not TESTING:
     from allennlp.service.predictors import Predictor
     from allennlp.common.file_utils import cached_path
 
-    archive = load_archive('model.tar.gz') # discourse model
+    archive = load_archive('https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz') # discourse model
     predictor = Predictor.from_archive(archive, 'discourse_classifier')
 
     MEDLINE_WORD_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/medline_word_prob.json'

@@ -75,6 +75,13 @@ The interface will look something like this
   <img src="static/interface.png" width="600" />
 </p>
 
+And output will look like this (highlight means claim,
+  tag behind the sentence is discourse prediction)
+
+<p float="left">
+  <img src="static/output.png" width="600" />
+</p>
+
 
 We will release a dataset and model of scientific claims tagged by expert soon
 (in a coming months).
@@ -82,10 +89,11 @@ We will release a dataset and model of scientific claims tagged by expert soon
 
 ## Requirements
 
-- [Pubmed RCT](https://github.com/Franck-Dernoncourt/pubmed-rct) - dataset
+- [Python 3.6](https://www.python.org/downloads/release/python-360/)
 - [AllenNLP](https://github.com/allenai/allennlp)
 - [spacy](https://github.com/explosion/spaCy)
 - [fastText](https://github.com/facebookresearch/fastText)
+- [Pubmed RCT](https://github.com/Franck-Dernoncourt/pubmed-rct) - dataset
 
 
 ## Acknowledgement
