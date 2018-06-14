@@ -18,9 +18,8 @@ body > .container {
     padding: 35px 0 15px 0;
 }
 
-.navbar-default .navbar-brand {
-    font-size: 28px;
-    font-weight: 600;
+.navbar .container {
+    padding: 0;
 }
 
 .footer {
@@ -38,6 +37,13 @@ body > .container {
 
 .footer > .container {
     padding-top: 15px;
+}
+
+/* remove outer glow of textarea input */
+.form-control:focus {
+    outline-color: transparent;
+    outline-style: none;
+    box-shadow: none;
 }
 
 /* -------------- */
@@ -66,14 +72,66 @@ body > .container {
     vertical-align: middle;
 }
 
+.navbar-default .navbar-brand {
+    font-weight: 600;
+}
+
+/* mobile first */
+@media only screen and (min-width: 768px) {
+    .navbar-default .navbar-brand {
+        font-size: 1.5rem;
+    }
+}
+
 /* mobile */
-@media screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     .leftBox {
         width: 15%;
     }
 
     .rightTxt {
         width: 83%;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    body > .container {
+        width: 92%;
+    }
+
+    .leftBox {
+        display: none;
+    }
+
+    .rightTxt {
+        width: 100%;
+        /* padding: 0; */
+    }
+
+    #data-entity-results-dim {
+        border-left: 4px solid #81ff76;
+    }
+    #data-entity-conclusions-dim {
+        border-left: 4px solid #ffa425;
+    }
+    #data-entity-methods-dim {
+        border-left: 4px solid #7cb9e8;
+    }
+    #data-entity-objective-dim {
+        border-left: 4px solid #fb607f;
+    }
+    #data-entity-background-dim {
+        border-left: 4px solid #f6f3b4;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    body {
+        margin-bottom: 90px;
+    }
+
+    .footer {
+        height: 90px;
     }
 }
 

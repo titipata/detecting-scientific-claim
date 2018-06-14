@@ -18,19 +18,22 @@
           name="text_input"
           placeholder="Put scientific abstract or text that you want to detect claims here..."
           value="{{ request.form.get('text_input', '') }}"></textarea>
-        </br>
+        <br/>
         <input type="submit" class="override-button-font center-block btn btn-warning" value="Submit" name="submitbtn">
     </form>
 
-    </br>
+    <br/>
 
     {% if len(abstract) != 0 %}
-      <p>{{ abstract }}</p></br>
+      {% for para in abstract.split('\n') %}
+        <p>{{para}}</p>
+      {% endfor %}
+    <br/>
     {% endif %}
 
     {% if len(sents) != 0 %}
       <h4><b>Prediction</b></h4>
-      </br>
+      <br/>
 
       <ul style="list-style: none; padding: 0;">
       {% for i, (sent, score, label) in enumerate(zip(sents, scores, labels)) %}
@@ -54,14 +57,14 @@
         </div>
         <!-- splited sentence -->
         {% if score > 50 %}
-        <div class="rightTxt">
+        <div class="rightTxt" id="data-entity-{{label.lower()}}-dim">
           <b>{{sent}}
             <mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark>
             <mark class="label-entity" id="data-entity-claim">CLAIM</mark>
           </b>
         </div>
         {% else %}
-        <div class="rightTxt">
+        <div class="rightTxt" id="data-entity-{{label.lower()}}-dim">
           {{sent}}
           <b>
             <mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark>
