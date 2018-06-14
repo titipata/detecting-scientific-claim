@@ -96,6 +96,28 @@ We will release a dataset and model of scientific claims tagged by expert soon
 - [Pubmed RCT](https://github.com/Franck-Dernoncourt/pubmed-rct) - dataset
 
 
+## Citing the repository
+
+We do not have the publication related to the repository yet. You can cite the
+Github repository for now:
+
+
+Titipat Achakulvisut, Chandra Bhagavatula, Daniel E Acuna, Konrad P Kording, _Claim Extraction for Scientific Publications_,
+https://github.com/titipata/detecting-scientific-claim, 2018
+
+or using BibTeX
+
+```
+@misc{Achakulvisut2018,
+  author = {Achakulvisut T, Bhagavatula C, Acuna DE, Kording KP},
+  title = {Claim Extraction for Scientific Publications},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/titipata/detecting-scientific-claim}}
+}
+```
+
 ## Acknowledgement
 
 This project is done at the [Allen Institute for Artificial Intelligence](https://allenai.org/)
