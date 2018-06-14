@@ -10,6 +10,7 @@ from nltk import word_tokenize, sent_tokenize
 
 import flask
 from flask import Flask, request
+from gevent.wsgi import WSGIServer
 
 TESTING = False # if true, run testing
 if not TESTING:
@@ -120,4 +121,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', processes=3)
+    http_server = WSGIServer(('0.0.0.0', 5000), app)
+    http_server.serve_forever()

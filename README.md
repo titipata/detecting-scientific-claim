@@ -66,7 +66,7 @@ application to detect claims as follows
 
 ```bash
 export FLASK_APP=main.py
-flask run --host=0.0.0.0 --port 5000
+flask run --host=0.0.0.0 # this will serve at port 5000
 ```
 
 The interface will look something like this
