@@ -159,3 +159,7 @@ body > .container {
 #data-entity-results {
     background-color: #81ff76;
 }
+
+#data-entity-claim {
+    background-color: #dddddd;
+}

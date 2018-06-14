@@ -55,11 +55,17 @@
         <!-- splited sentence -->
         {% if score > 50 %}
         <div class="rightTxt">
-          <b>{{sent}} <mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark></b>
+          <b>{{sent}}
+            <mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark>
+            <mark class="label-entity" id="data-entity-claim">CLAIM</mark>
+          </b>
         </div>
         {% else %}
         <div class="rightTxt">
-          {{sent}} <b><mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark></b>
+          {{sent}}
+          <b>
+            <mark class="label-entity" id="data-entity-{{label.lower()}}">{{ label }}</mark>
+          </b>
         </div>
         {% endif %}
         </li>
