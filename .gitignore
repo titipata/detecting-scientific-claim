@@ -127,6 +127,7 @@ venv.bak/
 
 
 # data
+*.ipynb
 pubmed-rct/PubMed_200k_RCT/*.json
 output/*
 expert_tags/*

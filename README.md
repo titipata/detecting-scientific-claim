@@ -8,7 +8,7 @@ Detecting claim from scientific publication using discourse and sentence embeddi
 Running AllenNLP to train discourse model as follows
 
 ```bash
-python -m allennlp.run train pubmed_rct.json -s output --include-package discourse
+python -m allennlp.run train experiments/pubmed_rct.json -s output --include-package discourse
 ```
 
 or

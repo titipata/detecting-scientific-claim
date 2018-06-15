@@ -1,5 +1,5 @@
 """
-Flask application for serving demo for detecting scientific claims
+Flask application for 'detecting scientific claims' demo
 """
 import os
 import sys
@@ -16,8 +16,13 @@ import flask
 from flask import Flask, request
 from gevent.wsgi import WSGIServer
 
-PUBMED_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=%s"
 TESTING = False # if true, run testing
+PUBMED_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=%s'
+DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz'
+MEDLINE_WORD_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/medline_word_prob.json'
+LOGIST_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/logist_model.pkl'
+PRINCIPAL_COMP_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/principal_comp.txt'
+
 if not TESTING:
     from fastText import load_model
     from sklearn.externals import joblib
@@ -30,17 +35,13 @@ if not TESTING:
     from allennlp.service.predictors import Predictor
     from allennlp.common.file_utils import cached_path
 
-    archive = load_archive('https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz') # discourse model
+    archive = load_archive(DISCOURSE_MODEL_PATH) # discourse model
     predictor = Predictor.from_archive(archive, 'discourse_classifier')
-
-    MEDLINE_WORD_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/medline_word_prob.json'
-    LOGIST_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/logist_model.pkl'
-    PRINCIPAL_COMP_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/principal_comp.txt'
 
     assert os.path.exists('wiki.en.bin') == True
     ft_model = load_model('wiki.en.bin') # fastText word vector
     p_dict = json.load(open(cached_path(MEDLINE_WORD_PATH), 'r')) # medline word probability
-    logist_model = joblib.load(cached_path(LOGIST_PATH)) # trained logistic regression
+    logist_model = joblib.load(cached_path(LOGIST_MODEL_PATH)) # trained logistic regression
     pc = np.loadtxt(cached_path(PRINCIPAL_COMP_PATH)) # principal comp
 
 
