@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Find the claim!</title>
+    <title>detecting scientific claims</title>
     {% include 'head.html' %}
 </head>
 
@@ -16,7 +16,7 @@
           class="form-control"
           rows="5" id="abstract"
           name="text_input"
-          placeholder="Put scientific abstract or text that you want to detect claims here..."
+          placeholder="Put scientific abstract or text or link to Pubmed article in following format https://www.ncbi.nlm.nih.gov/pubmed/29901650 that you want to detect claims here..."
           value="{{ request.form.get('text_input', '') }}"></textarea>
         <br/>
         <input type="submit" class="override-button-font center-block btn btn-warning" value="Submit" name="submitbtn">
@@ -24,6 +24,12 @@
 
     <br/>
 
+    <!-- article title -->
+    {% if len(title) != 0 %}
+      <h5><b>{{ title }}</b></h5>
+    {% endif %}
+
+    <!-- article abstract -->
     {% if len(abstract) != 0 %}
       {% for para in abstract.split('\n') %}
         <p>{{para}}</p>

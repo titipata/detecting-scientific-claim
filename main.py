@@ -4,14 +4,19 @@ Flask application for serving demo for detecting scientific claims
 import os
 import sys
 import json
+from itertools import chain
 import numpy as np
 import pandas as pd
 from nltk import word_tokenize, sent_tokenize
+
+from lxml import etree, html
+from urllib.request import urlopen
 
 import flask
 from flask import Flask, request
 from gevent.wsgi import WSGIServer
 
+PUBMED_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=%s"
 TESTING = False # if true, run testing
 if not TESTING:
     from fastText import load_model
@@ -62,6 +67,42 @@ def remove_pc(x, pc):
     return x - x.dot(pc.transpose()) * pc
 
 
+def parse_pubmed_xml(pmid):
+    """
+    Parse article information for the given PMID
+    """
+    url = PUBMED_URL % pmid
+    page = urlopen(url).read()
+    tree = html.fromstring(page)
+    abstract = ''
+    for e in tree.xpath('//abstract/abstracttext'):
+        if e is not None:
+            abstract += e.text
+    title = ' '.join([e.text for e in tree.xpath('//articletitle')
+                     if e is not None])
+    return {'title': title, 'abstract': abstract}
+
+
+def check_text_input(text_input):
+    if 'www.ncbi.nlm.nih.gov/pubmed/' in text_input or text_input.isdigit():
+        pmid = ''.join(c for c in text_input if c.isdigit())
+        article = parse_pubmed_xml(pmid)
+    else:
+        article = {'title': '', 'abstract': text_input}
+    return article
+
+
+def stringify_children(node):
+    """
+    Filters and removes possible Nones in texts and tails
+    ref: http://stackoverflow.com/questions/4624062/get-all-text-inside-a-tag-in-lxml
+    """
+    parts = ([node.text] +
+             list(chain(*([c.text, c.tail] for c in node.getchildren()))) +
+             [node.tail])
+    return ''.join(filter(None, parts))
+
+
 app = Flask(__name__,
             template_folder='flask_templates')
 app.secret_key = 'made in Thailand.'
@@ -70,14 +111,15 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        abstract = request.form.get("text_input")
-        if len(abstract.strip()) > 0:
+        text_input = request.form.get("text_input")
+        article = check_text_input(text_input)
+        if len(article.get('abstract', '').strip()) > 0:
             sentences = []
             sentences_vect = []
             labels = []
 
             if not TESTING:
-                for sent in sent_tokenize(abstract):
+                for sent in sent_tokenize(article.get('abstract', '')):
                     sent_vec = get_sentence_vector(sent)
                     sent_vec = remove_pc(sent_vec, pc) # remove the first principal component
                     discourse_output = predictor.predict_json({'sentence': sent})
@@ -106,10 +148,10 @@ def index():
         data = {'sents': sentences,
                 'scores': p_claims,
                 'labels': labels,
-                'abstract': abstract,
                 'len': len,
                 'enumerate': enumerate,
                 'zip': zip}
+        data.update(article)
     else:
         data = {'sents': [],
                 'scores': [],
@@ -117,6 +159,7 @@ def index():
                 'len': len,
                 'enumerate': enumerate,
                 'zip': zip}
+        data.update({'title': '', 'abstract': ''})
     return flask.render_template('index.html', **data)
 
 
