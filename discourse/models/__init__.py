@@ -1,1 +1,2 @@
 from discourse.models.discourse_model import DiscourseClassifier
+from discourse.models.discourse_bnn_model import DiscourseBNNClassifier

@@ -49,7 +49,6 @@ class DiscourseClassifier(Model):
         logits = self.classifier_feedforward(encoded_sentence)
         class_probabilities = F.softmax(logits)
 
-        output_dict = {'class_probabilities': class_probabilities}
         output_dict = {'logits': logits}
         if label is not None:
             loss = self.loss(logits, label.squeeze(-1))

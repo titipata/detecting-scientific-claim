@@ -5,7 +5,7 @@
   "train_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/train.json",
   "validation_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json",
   "model": {
-    "type": "discourse_classifier",
+    "type": "discourse_bnn_classifier",
     "text_field_embedder": {
       "tokens": {
         "type": "embedding",
@@ -14,7 +14,15 @@
         "trainable": false
       }
     },
-    "sentence_encoder": {
+    "embedding_dropout": 0.25,
+    "pre_encode_feedforward": {
+      "input_dim": 100,
+      "num_layers": 1,
+      "hidden_dims": [100],
+      "activations": ["relu"],
+      "dropout": [0.25]
+    },
+    "encoder": {
       "type": "lstm",
       "bidirectional": true,
       "input_size": 100,
@@ -22,12 +30,20 @@
       "num_layers": 1,
       "dropout": 0.2
     },
-    "classifier_feedforward": {
-      "input_dim": 200,
+    "integrator": {
+      "type": "lstm",
+      "bidirectional": true,
+      "input_size": 600,
+      "hidden_size": 100,
+      "num_layers": 1,
+    },
+    "integrator_dropout": 0.1,
+    "output_layer": {
+      "input_dim": 800,
       "num_layers": 2,
-      "hidden_dims": [100, 5],
+      "hidden_dims": [400, 5],
       "activations": ["relu", "linear"],
-      "dropout": [0.2, 0.0]
+      "dropout": [0.3, 0.0]
     }
   },
   "iterator": {
@@ -37,12 +53,14 @@
   },
   "trainer": {
     "num_epochs": 40,
-    "patience": 10,
+    "patience": 5,
     "cuda_device": 0,
     "grad_clipping": 5.0,
+    "grad_norm": 5.0,
     "validation_metric": "+accuracy",
     "optimizer": {
-      "type": "adagrad"
+      "type": "adam",
+      "lr": 0.001
     }
   }
 }
