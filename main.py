@@ -78,7 +78,7 @@ def parse_pubmed_xml(pmid):
     abstract = ''
     for e in tree.xpath('//abstract/abstracttext'):
         if e is not None:
-            abstract += e.text
+            abstract += stringify_children(e).strip()
     title = ' '.join([e.text for e in tree.xpath('//articletitle')
                      if e is not None])
     return {'title': title, 'abstract': abstract}
