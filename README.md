@@ -14,7 +14,7 @@ python -m allennlp.run train experiments/pubmed_rct.json -s output --include-pac
 or
 
 ```bash
-allennlp train pubmed_rct.json -s output --include-package discourse
+allennlp train experiments/pubmed_rct.json -s output --include-package discourse
 ```
 
 We point data location to Amazon S3 directly in `pubmed_rct.json`
