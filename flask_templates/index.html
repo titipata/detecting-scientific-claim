@@ -11,12 +11,14 @@
 
   <div class="container">
 
+    <p>Search articles from PubMed <a href="https://www.ncbi.nlm.nih.gov/pubmed/">here</a></p>
+
     <form action="/" method="post">
         <textarea
           class="form-control"
           rows="5" id="abstract"
           name="text_input"
-          placeholder="Put scientific abstract or text or link to Pubmed article in following format https://www.ncbi.nlm.nih.gov/pubmed/29901650 that you want to detect claims here..."
+          placeholder="Put scientific abstract or text or link to PubMed article in following format https://www.ncbi.nlm.nih.gov/pubmed/29901650 that you want to detect claims here..."
           value="{{ request.form.get('text_input', '') }}"></textarea>
         <br/>
         <input type="submit" class="override-button-font center-block btn btn-warning" value="Submit" name="submitbtn">
