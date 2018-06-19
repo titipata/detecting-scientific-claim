@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentence Annotation Tool</title>
+    {% include 'head.html' %}
+</head>
+
+<body>
+
+{% include 'nav.html' %}
+
+<div class="container">
+
+  <h1><b>Is The Given Sentence A Claim?</b></h1><br>
+
+  <h2>The Task</h2>
+  <p>
+    In this task, you will identify whether a given sentence contains a claim.
+    If the given sentence contains claim, you can check the checkbox.
+  </p>
+  <hr>
+
+  <h2>Overview</h2>
+  <p>
+    A claim is a statement of belief that can be argued against.
+    This statement is a claim because someone can argue against it.
+    In a research article, scientists make a claim and present evidence supporting their claim.
+  </p>
+  <hr>
+
+  <h2>What is a claim statement?</h2>
+  <p>A sentence can be marked as a claim, if any one of the following is true:<p>
+  <ul>
+    <li><span class="close-bullet-gap">It declares something is better -- for example: "Our method outperforms existing techniques"</span></li>
+    <li><span class="close-bullet-gap">It proposes something new -- for example: "We propose a novel medicine"</span></li>
+    <li><span class="close-bullet-gap">It describes a new finding or a new cause-effect relationship -- for example: "We find that Bedaquiline has anti-cancer activity"</span></li>
+  </ul>
+  <p>
+    All of the above can be argued against, based on evidence.
+  </p>
+  <hr>
+
+  <h2>Examples</h2>
+  <p>Here are some examples of claim tagging from 3 sample papers from <a href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a></p>
+
+  {% for e1, e2 in examples %}
+    {% if '###' in e1 %}
+      <br/>
+      <h4>{{e2}}</h4>
+      <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{e1.replace('#', '').strip()}}">PMID: {{e1.replace('#', '').strip()}}</a>
+    {% else %}
+      <p><b><mark class="label-entity" id="data-entity-{{e2.replace(' ', '-').lower()}}">{{ e2 }}</mark></b>{{e1}}</p>
+    {% endif %}
+  {% endfor %}
+
+  {% if session.email %}
+      <form action="{{ url_for('start_tagging') }}" method="post">
+        <input type="submit" class="override-button-font center-block btn btn-warning" value="Start Tagging" name="submitbtn">
+      </form>
+  {% else %}
+      <p class="text-center"><b>To start tagging, log in using your email first</b></p>
+  {% endif %}
+
+</div>
+
+{% include 'footer.html' %}
+
+</body>
+</html>

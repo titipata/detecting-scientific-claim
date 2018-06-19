@@ -1,0 +1,227 @@
+/* -------------- */
+/* custom styling */
+/* -------------- */
+
+html {
+    /* use default font from bootstrap 4 */
+    /* font-family: 'helvetica neue', helvetica, arial, sans-serif; */
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+body > .container {
+    padding: 35px 0 15px 0;
+}
+
+.navbar .container {
+    padding: 0;
+}
+
+.footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 70px;
+    line-height: 20px; /* Vertically center the text there */
+    background-color: #1E303C;
+    color: #fff;
+    font-size: 12px;
+}
+
+.footer > .container {
+    padding-top: 15px;
+}
+
+/* remove outer glow of textarea input */
+.form-control:focus {
+    outline-color: transparent;
+    outline-style: none;
+    box-shadow: none;
+}
+
+/* -------------- */
+/* result styling */
+/* -------------- */
+
+.centerValue {
+    width: auto;
+    /*padding-right: 1%;*/
+    display: block;
+    /*vertical-align: top;*/
+    padding-top: 0.25em;
+}
+
+.leftBox {
+    text-align: center;
+    width: 6%;
+    display: inline-block;
+}
+
+.rightTxt {
+    margin-bottom: 20px;
+    width: 92%;
+    padding-left: 2%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.navbar-default .navbar-brand {
+    font-weight: 600;
+}
+
+/* mobile first */
+@media only screen and (min-width: 768px) {
+    .navbar-default .navbar-brand {
+        font-size: 1.5rem;
+    }
+}
+
+/* mobile */
+@media only screen and (max-width: 768px) {
+    .leftBox {
+        width: 15%;
+    }
+
+    .rightTxt {
+        width: 83%;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    body > .container {
+        width: 92%;
+    }
+
+    .leftBox {
+        display: none;
+    }
+
+    .rightTxt {
+        width: 100%;
+        /* padding: 0; */
+    }
+
+    #data-entity-results-dim {
+        border-left: 4px solid #81ff76;
+    }
+    #data-entity-conclusions-dim {
+        border-left: 4px solid #ffa425;
+    }
+    #data-entity-methods-dim {
+        border-left: 4px solid #7cb9e8;
+    }
+    #data-entity-objective-dim {
+        border-left: 4px solid #fb607f;
+    }
+    #data-entity-background-dim {
+        border-left: 4px solid #f6f3b4;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    body {
+        margin-bottom: 90px;
+    }
+
+    .footer {
+        height: 90px;
+    }
+}
+
+/* ----------------------- */
+/* progress bar overriding */
+/* ----------------------- */
+
+.progress {
+    vertical-align: top;
+    height: 6px;
+    margin-top: 0.5em;
+    margin-bottom: auto;
+    border-radius: 2px;
+    /*background-color: #DDD;
+    box-shadow: none;
+    border: solid #ddd 0.25px;
+    border-left: solid #000 1px;*/
+}
+
+.progress-bar {
+    background-color: #F8B902;
+}
+
+/* ----------------- */
+/* navbar overriding */
+/* ----------------- */
+
+.p-in-nav {
+    padding: 15px 15px 0px 15px;
+    color: #ff3848;
+}
+
+.override-nav-color, .panel-default>.panel-heading {
+    background-color:#1E303C;
+}
+
+.override-nav-color, .navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand, .panel-default>.panel-heading {
+    color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-brand:hover {
+    color: #ddd;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-brand:focus {
+    color: #bbb;
+}
+
+.login-panel {
+    margin-top: 10%;
+}
+
+.override-button-font {
+    font-size: 1.25em;
+}
+
+.label-entity {
+    padding: .2em .3em;
+    font-size: 0.8rem;
+    margin: 0 .25em;
+    line-height: 1;
+    display: inline-block;
+    border-radius: .25em;
+    box-sizing: border-box;
+}
+
+#data-entity-background {
+    background-color: #f6f3b4;
+}
+
+#data-entity-objective {
+    background-color: #fb607f;
+}
+
+#data-entity-methods {
+    background-color: #7cb9e8;
+}
+
+#data-entity-conclusions {
+    background-color: #ffa525;
+}
+
+#data-entity-results {
+    background-color: #81ff76;
+}
+
+#data-entity-claim {
+    background-color: #ff7f7f;
+}
+
+#data-entity-not-claim {
+    background-color: #dddddd;
+}

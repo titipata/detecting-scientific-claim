@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default navbar-static-top override-nav-color">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Annotation Tool</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if request.path == "/login/" %}
+                {% else %}
+                    {% if session.email %}
+                    <li class="nav-item dropdown">
+                        <p class="p-in-nav">Logged in as: <span style="color: #97e8ef; font-weight:600;">{{session.email}}</span></p>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a href="/user_tag/{{session.email}}">Previous tags</a>
+                    </li>
+                    <li>
+                      <a href="{{ url_for('logout') }}">Log out</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <p class="p-in-nav"><b>To start tagging, log in using your email first.</b></p>
+                    </li>
+                    <li><a href="{{ url_for('login') }}">Log in</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
