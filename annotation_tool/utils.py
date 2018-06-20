@@ -21,6 +21,7 @@ def parse_pubmed_xml(pmid):
     """
     Parse article information for the given PMID
     """
+    pmid = str(pmid)
     url = PUBMED_URL % pmid
     page = urlopen(url).read()
     tree = html.fromstring(page)

@@ -41,13 +41,13 @@
   <hr>
 
   <h2>Examples</h2>
-  <p>Here are some examples of claim tagging from 3 sample papers from <a href="https://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a></p>
+  <p>Here are some examples of claim tagging from 3 sample papers from <a href="https://www.ncbi.nlm.nih.gov/pubmed/" target="_blank">PubMed</a></p>
 
   {% for e1, e2 in examples %}
     {% if '###' in e1 %}
       <br/>
       <h4>{{e2}}</h4>
-      <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{e1.replace('#', '').strip()}}">PMID: {{e1.replace('#', '').strip()}}</a>
+      <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{e1.replace('#', '').strip()}}" target="_blank">PMID: {{e1.replace('#', '').strip()}}</a>
     {% else %}
       <p><b><mark class="label-entity" id="data-entity-{{e2.replace(' ', '-').lower()}}">{{ e2 }}</mark></b>{{e1}}</p>
     {% endif %}

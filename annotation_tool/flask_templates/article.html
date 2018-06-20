@@ -18,8 +18,13 @@
 
   <!-- form input for tags -->
   <form action="{{ url_for('handle_submit') }}" method="post">
-    {% for sent in sentences %}
-      <p>{{ sent }}</p>
+    {% for i, sent in enumerate(sentences) %}
+      <tr>
+        <td>
+          <input type="checkbox" name="labels" value="{{i}}" id="sent_{{i}}">
+          <label for="sent_{{i}}">{{ sent }}</label>
+        </td>
+      </tr>
     {% endfor %}
     <input type="hidden" name="paper_id" value="{{paper_id}}">
     <input type="submit" value="Submit" name="submitbtn">

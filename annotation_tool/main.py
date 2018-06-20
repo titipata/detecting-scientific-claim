@@ -2,13 +2,16 @@ import os
 import sys
 import csv
 import numpy as np
-from nltk import word_tokenize, sent_tokenize
+from nltk import sent_tokenize
 from utils import *
+import json
 
 import flask
 import flask_login
 from flask import Flask, request, session
 
+PMIDS_PATH = os.path.join('data', 'pmids.txt')
+LABELS_PATH = os.path.join('data', 'labels.json')
 
 app = Flask(__name__,
             template_folder='flask_templates')
@@ -16,8 +19,48 @@ app.secret_key = 'made in Thailand.'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-with open(os.path.join('data', 'pmids.txt'), 'r') as f:
+
+with open(PMIDS_PATH, 'r') as f:
     pmids = [l.strip() for l in f.readlines()]
+
+
+def read_json(file_path):
+    """
+    Read collected file from path
+    """
+    if not os.path.exists(file_path):
+        collected_data = []
+        return collected_data
+    else:
+        with open(file_path, 'r') as fp:
+            collected_data = [json.loads(line) for line in fp]
+        return collected_data
+
+
+def save_json(ls, file_path):
+    """
+    Save list of dictionary to JSON
+    """
+    with open(file_path, 'w') as fp:
+        fp.write('\n'.join(json.dumps(i) for i in ls))
+
+
+def check_ids(collected_data, user_id, tagged=False):
+    """
+    Check PMIDs that are tagged or not tagged
+    """
+    pmids_tagged = [c['paper_id'] for c in collected_data
+                    if c['user_id'] == user_id]
+    if tagged is True:
+        return pmids_tagged
+    else:
+        pmids_untagged = list(set(pmids) - set(pmids_tagged))
+        return pmids_untagged
+
+
+def remove_previous(collected_data, user_id, paper_id):
+    return [c for c in collected_data
+            if c['user_id'] is not user_id and c['paper_id'] is not paper_id]
 
 
 class User(flask_login.UserMixin):
@@ -66,24 +109,56 @@ def index():
 
 @app.route("/start_tagging/", methods=['POST'])
 def start_tagging():
-    pmid = pmids[0]
-    return flask.redirect('/paper_id/%s' % pmid)
+    collected_data = read_json(LABELS_PATH)
+    pmids_untagged = check_ids(collected_data, session['email'], tagged=False)
+    return flask.redirect('/paper_id/%s' % np.random.choice(pmids_untagged))
 
 
 @app.route('/paper_id/<paper_id>')
 def tag_paper_id(paper_id):
-    paper_id = str(paper_id)
+    """
+    Tag the given PMID (paper_id)
+    """
     data = parse_pubmed_xml(paper_id)
-    data.update({'paper_id': paper_id,
-                 'enumerate': enumerate,
-                 'zip': zip,
-                 'sentences': sent_tokenize(data.get('abstract'))})
+    sentences = sent_tokenize(data['abstract'])
+    data.update({
+        'paper_id': paper_id,
+        'sentences': sentences,
+        'enumerate': enumerate,
+        'zip': zip,
+    })
     return flask.render_template('article.html', **data)
 
 
 @app.route('/handle_submit/', methods=['GET', 'POST'])
 def handle_submit():
-    return flask.redirect('/paper_id/%s' % np.random.choice(pmids))
+    """
+    Save tagged labels to JSON file
+    """
+    labels = [int(label) for label in request.form.getlist('labels')]
+    user_id = session.get('email', '')
+    paper_id = request.form['paper_id']
+    data = parse_pubmed_xml(paper_id)
+    sentences = sent_tokenize(data['abstract'])
+    data.update({
+        'paper_id': paper_id,
+        'user_id': user_id,
+        'sentences': sentences,
+        'labels': [int(s in labels) for s in np.arange(len(sentences))]
+    })
+    # save data
+    collected_data = read_json(LABELS_PATH)
+    collected_data = remove_previous(collected_data,
+                                     data['user_id'],
+                                     data['paper_id'])
+    collected_data += [data]
+    save_json(collected_data, LABELS_PATH)
+
+    pmids_untagged = check_ids(collected_data, session['email'], tagged=False)
+    if len(pmids_untagged) > 0:
+        return flask.redirect('/paper_id/%s' % np.random.choice(pmids_untagged))
+    else:
+        return flask.redirect('/')
 
 
 if __name__ == "__main__":
