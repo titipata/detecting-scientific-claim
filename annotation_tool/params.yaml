@@ -1,0 +1,8 @@
+# labels
+labels: data/labels.txt
+
+# path to pmids
+pmids_path: data/pmids.txt
+
+# output for tag
+output_path: data/labels.json

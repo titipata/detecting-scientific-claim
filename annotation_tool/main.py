@@ -1,17 +1,23 @@
 import os
 import sys
 import csv
+import json
+import yaml
 import numpy as np
 from nltk import sent_tokenize
 from utils import *
-import json
 
 import flask
 import flask_login
 from flask import Flask, request, session
 
-PMIDS_PATH = os.path.join('data', 'pmids.txt')
-LABELS_PATH = os.path.join('data', 'labels.json')
+
+params = yaml.load(open("params.yaml", "r"))
+PMIDS_PATH = params['pmids_path']
+OUTPUT_PATH = params['output_path']
+with open(PMIDS_PATH, 'r') as f:
+    pmids = [l.strip() for l in f.readlines()]
+
 
 app = Flask(__name__,
             template_folder='flask_templates')
@@ -19,9 +25,6 @@ app.secret_key = 'made in Thailand.'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-
-with open(PMIDS_PATH, 'r') as f:
-    pmids = [l.strip() for l in f.readlines()]
 
 
 def read_json(file_path):
@@ -109,7 +112,7 @@ def index():
 
 @app.route("/start_tagging/", methods=['POST'])
 def start_tagging():
-    collected_data = read_json(LABELS_PATH)
+    collected_data = read_json(OUTPUT_PATH)
     pmids_untagged = check_ids(collected_data, session['email'], tagged=False)
     return flask.redirect('/paper_id/%s' % np.random.choice(pmids_untagged))
 
@@ -147,12 +150,12 @@ def handle_submit():
         'labels': [int(s in labels) for s in np.arange(len(sentences))]
     })
     # save data
-    collected_data = read_json(LABELS_PATH)
+    collected_data = read_json(OUTPUT_PATH)
     collected_data = remove_previous(collected_data,
                                      data['user_id'],
                                      data['paper_id'])
     collected_data += [data]
-    save_json(collected_data, LABELS_PATH)
+    save_json(collected_data, OUTPUT_PATH)
 
     pmids_untagged = check_ids(collected_data, session['email'], tagged=False)
     if len(pmids_untagged) > 0:

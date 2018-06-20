@@ -2,3 +2,4 @@ flask
 flask-login
 nltk
 lxml
+pyyaml

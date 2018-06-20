@@ -6,11 +6,14 @@ annotation tool that we made to collect claim dataset.
 
 ### Annotation Tool Web Service
 
-First, list PMIDs that you want to tag in `data/pmids.txt` and label that you
-want to annotate `data/labels.txt`. The instructions for annotators can be edited in
-`flask_templates/index.html`.
+All parameters are located in `params.yaml` include the following
 
-After edit 3 files, you can run `flask` to start the annotation tool.
+- `pmids_path` is a path to list of PMIDs that you want to tag, default as `data/pmids.txt`
+- `labels` is a path to list of labels that you want to annotate, default as `data/labels.txt`
+- `output_path` is a path to output file, default as `data/labels.json`
+
+The instructions for annotators can be edited in `flask_templates/index.html`.
+After editing YAML file, you can run `flask` to start the annotation tool.
 
 ```bash
 export FLASK_APP=main.py
