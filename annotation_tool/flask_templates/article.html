@@ -10,7 +10,21 @@
 {% include 'nav.html' %}
 
 <div class="container">
-  {{ pmid }}
+  <!-- article details -->
+  <h4>{{ title }}</h4>
+  <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{paper_id.strip()}}">PMID: {{paper_id}}</a>
+  <p>{{ abstract }}</p>
+  <hr>
+
+  <!-- form input for tags -->
+  <form action="{{ url_for('handle_submit') }}" method="post">
+    {% for sent in sentences %}
+      <p>{{ sent }}</p>
+    {% endfor %}
+    <input type="hidden" name="paper_id" value="{{paper_id}}">
+    <input type="submit" value="Submit" name="submitbtn">
+  </form>
+
 </div>
 
 {% include 'footer.html' %}

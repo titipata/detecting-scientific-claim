@@ -1,10 +1,9 @@
 import os
 import sys
-from nltk import word_tokenize, sent_tokenize
-
 import csv
-from lxml import etree, html
-from urllib.request import urlopen
+import numpy as np
+from nltk import word_tokenize, sent_tokenize
+from utils import *
 
 import flask
 import flask_login
@@ -72,8 +71,19 @@ def start_tagging():
 
 
 @app.route('/paper_id/<paper_id>')
-def tag_paper_id(paper_id, query_from_s2=False):
-    return flask.render_template('article.html', paper_id=paper_id)
+def tag_paper_id(paper_id):
+    paper_id = str(paper_id)
+    data = parse_pubmed_xml(paper_id)
+    data.update({'paper_id': paper_id,
+                 'enumerate': enumerate,
+                 'zip': zip,
+                 'sentences': sent_tokenize(data.get('abstract'))})
+    return flask.render_template('article.html', **data)
+
+
+@app.route('/handle_submit/', methods=['GET', 'POST'])
+def handle_submit():
+    return flask.redirect('/paper_id/%s' % np.random.choice(pmids))
 
 
 if __name__ == "__main__":
