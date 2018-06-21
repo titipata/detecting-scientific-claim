@@ -10,6 +10,10 @@
 {% include 'nav.html' %}
 
 <div class="container">
+  <!-- progress -->
+  Progress: {{ n_tagged }} out of {{ n_total }} documents
+  <hr>
+
   <!-- article details -->
   <h4>{{ title }}</h4>
   <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{paper_id.strip()}}">PMID: {{paper_id}}</a>

@@ -9,7 +9,7 @@ annotation tool that we made to collect claim dataset.
 All parameters are located in `params.yaml` include the following
 
 - `pmids_path` is a path to list of PMIDs that you want to tag, default as `data/pmids.txt`
-- `labels` is a path to list of labels that you want to annotate, default as `data/labels.txt`
+- `labels` is a list of labels that you want to annotate
 - `output_path` is a path to output file, default as `data/labels.json`
 
 The instructions for annotators can be edited in `flask_templates/index.html`.

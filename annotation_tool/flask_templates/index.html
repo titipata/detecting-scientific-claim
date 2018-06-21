@@ -11,6 +11,15 @@
 
 <div class="container">
 
+  <!-- progress -->
+  {% if session.email %}
+    {% if n_tagged < n_total %}
+      <p>Your current progress: {{ n_tagged }} out of {{ n_total }} documents</p>
+    {% elif n_tagged == n_total %}
+      <p>Congratulations! You're done tagging {{ n_total }} documents</p>
+    {% endif %}
+  {% endif %}
+
   <h1><b>Is The Given Sentence A Claim?</b></h1><br>
 
   <h2>The Task</h2>
@@ -56,7 +65,13 @@
   {% if session.email %}
       <form action="{{ url_for('start_tagging') }}" method="post">
         <div class="submit-button-wrapper">
-          <input type="submit" class="override-button-font override-button-size btn btn-warning" value="Start Tagging" name="submitbtn">
+          {% if n_tagged == 0 %}
+            <input type="submit" class="override-button-font override-button-size btn btn-warning" value="Start Tagging" name="submitbtn">
+          {% elif n_tagged < n_total %}
+            <input type="submit" class="override-button-font override-button-size btn btn-warning" value="Continue Tagging" name="submitbtn">
+          {% else %}
+            <p class="text-center"><b>You're done tagging!</b></p>
+          {% endif %}
         </div>
       </form>
   {% else %}

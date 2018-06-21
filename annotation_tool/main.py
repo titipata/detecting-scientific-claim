@@ -17,7 +17,7 @@ PMIDS_PATH = params['pmids_path']
 OUTPUT_PATH = params['output_path']
 with open(PMIDS_PATH, 'r') as f:
     pmids = [l.strip() for l in f.readlines()]
-
+NUM_PMIDS = len(pmids)
 
 app = Flask(__name__,
             template_folder='flask_templates')
@@ -107,6 +107,12 @@ def index():
     with open('fixtures.txt', 'r') as f:
         examples = [line for line in csv.reader(f, delimiter=',')]
     data = {'examples': examples}
+    # progress
+    if session.get('email') is not None:
+        collected_data = read_json(OUTPUT_PATH)
+        pmids_tagged = check_ids(collected_data, session['email'], tagged=True)
+        data.update({'n_tagged': len(pmids_tagged),
+                     'n_total': NUM_PMIDS})
     return flask.render_template('index.html', **data)
 
 
@@ -130,6 +136,11 @@ def tag_paper_id(paper_id):
         'enumerate': enumerate,
         'zip': zip,
     })
+    # progress
+    collected_data = read_json(OUTPUT_PATH)
+    pmids_tagged = check_ids(collected_data, session['email'], tagged=True)
+    data.update({'n_tagged': len(pmids_tagged),
+                 'n_total': NUM_PMIDS})
     return flask.render_template('article.html', **data)
 
 

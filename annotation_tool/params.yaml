@@ -1,8 +1,18 @@
-# labels
-labels: data/labels.txt
-
-# path to pmids
+# path to PMIDs to tag
 pmids_path: data/pmids.txt
 
-# output for tag
+# output labels for tag
 output_path: data/labels.json
+
+# labels
+labels:
+  - CLAIM
+
+# default colors for each label
+colors:
+  - ff7f7f
+  - f6f3b4
+  - fb607f
+  - 7cb9e8
+  - ffa525
+  - dddddd
