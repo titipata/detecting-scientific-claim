@@ -8,31 +8,31 @@
 
 <body>
 
-{% include 'nav.html' %}
+    {% include 'nav.html' %}
 
-<div class="login-panel container col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
-    <br />
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1>Login</h1>
-            <p style="color: #ff3848;">Enter your email address to login.</p>
-        </div>
-        <form action="/login" method="GET" class="form panel-body">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon">
+    <div class="container" style="display: flex; align-items: center; justify-content: center; height: 50vh;">
+        <div class="card text-center" style="width: 22rem;">
+        <div class="card-body">
+            <p class="card-text" style="color: #ff3848;">Enter your email address to login.</p>
+            
+            <form action="/login" method="GET" class="form panel-body">
+                <div class="form-group">
+                    <div class="input">
+                        <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user" style="width: auto"></i>
                         </span>
-                    <input id="txtUsuario" runat="server" type="text" class="form-control" name="email" placeholder="email address" required="" />
+                        <input id="txtUsuario" runat="server" type="text" class="form-control" name="email" placeholder="email address" required="" />
+                    </div>
                 </div>
-            </div>
-            <br>
-            <button type="submit" id="btnLogin" runat="server" class="btn btn-default" style="width: 100%">
-                LOG IN
-            </button>
-        </form>
+                <button type="submit" id="btnLogin" runat="server" class="btn btn-primary" style="width: 100%; height: 3rem;">
+                    LOG IN
+                </button>
+            </form>
+        </div>
+        </div>
     </div>
-</div>
+
+    {% include 'footer.html' %}
 
 </body>
 
