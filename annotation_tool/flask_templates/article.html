@@ -26,8 +26,10 @@
         </td>
       </tr>
     {% endfor %}
-    <input type="hidden" name="paper_id" value="{{paper_id}}">
-    <input type="submit" value="Submit" name="submitbtn">
+    <div class="submit-button-wrapper">
+        <input type="hidden" name="paper_id" value="{{paper_id}}">
+        <input type="submit" class="override-button-font override-button-size btn btn-warning" value="Submit" name="submitbtn">
+    </div>
   </form>
 
 </div>

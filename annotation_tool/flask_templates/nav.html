@@ -7,21 +7,23 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ml-auto">
                 {% if request.path == "/login/" %}
                 {% else %}
                     {% if session.email %}
-                    <li class="nav-item dropdown">
-                        <p class="p-in-nav">Logged in as: <span style="color: #97e8ef; font-weight:600;">{{session.email}}</span></p>
+                    <li class="nav-item"></li>
+                        <a style="color:#ff3848" class="nav-link">Logged in as: <span style="color: #97e8ef; font-weight:600;">{{session.email}}</span></a>
                     </li>
-                    <li>
-                      <a href="{{ url_for('logout') }}">Log out</a>
+                    <li class="nav-item">
+                        <a class="btn btn-danger" style="color:white; font-weight: bold; height: 100%;" class="nav-link" href="{{ url_for('logout') }}">Log out</a>
                     </li>
                     {% else %}
-                    <li class="nav-item dropdown">
-                        <p class="p-in-nav"><b>To start tagging, log in using your email first.</b></p>
+                    <li class="nav-item">
+                        <a class="nav-link">To start tagging, log in using your email first.</a>
                     </li>
-                    <li><a href="{{ url_for('login') }}">Log in</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" style="color:white; font-weight: bold; height: 100%;" class="nav-link" href="{{ url_for('login') }}">Log in</a>
+                    </li>
                     {% endif %}
                 {% endif %}
             </ul>
