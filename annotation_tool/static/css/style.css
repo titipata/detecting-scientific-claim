@@ -159,7 +159,7 @@ body > .container {
 /* submit form */
 /*------------ */
 
-.submit-form {
+.submit-button-wrapper {
     display: flex;
     flex: 1;
     padding: 15px 0 30px 0;
@@ -199,6 +199,7 @@ body > .container {
 .override-button-font {
     font-size: 1.25em;
     font-weight: bold;
+    color: #333;
 }
 
 .override-button-size {
