@@ -54,8 +54,8 @@
   {% endfor %}
 
   {% if session.email %}
-      <form action="{{ url_for('start_tagging') }}" method="post">
-        <input type="submit" class="override-button-font center-block btn btn-warning" value="Start Tagging" name="submitbtn">
+      <form class="submit-form" action="{{ url_for('start_tagging') }}" method="post">
+        <input type="submit" class="override-button-font override-button-size btn btn-warning" value="Start Tagging" name="submitbtn">
       </form>
   {% else %}
       <p class="text-center"><b>To start tagging, log in using your email first</b></p>
