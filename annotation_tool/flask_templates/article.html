@@ -20,13 +20,43 @@
   <p>{{ abstract }}</p>
   <hr>
 
+  <style>
+    /* hide original pointer */
+    .check_container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* hide label-entity */
+    .label-entity {
+      display: none;
+    }
+    
+    /* show border when checked */
+    input:checked ~ .checkmark {
+      padding-left: 10px;
+      border-left: 4px solid #ff7f7f;
+    }
+
+    /* show label-entity when checked */
+    input:checked ~ .checkmark .label-entity {
+      display: inline;
+    }
+  </style>
+
   <!-- form input for tags -->
   <form action="{{ url_for('handle_submit') }}" method="post">
     {% for i, sent in enumerate(sentences) %}
       <tr>
         <td>
-          <input type="checkbox" name="labels" value="{{i}}" id="sent_{{i}}">
-          <label for="sent_{{i}}">{{ sent }}</label>
+          <div class="check_container" style="display: flex; padding-bottom: 15px;">
+            <input type="checkbox" name="labels" value="{{i}}" id="sent_{{i}}">
+            <label class="checkmark" for="sent_{{i}}">
+              {{ sent }} 
+              <mark class="label-entity" id="data-entity-claim">CLAIM</mark>
+            </label>
+          </div>
         </td>
       </tr>
     {% endfor %}
