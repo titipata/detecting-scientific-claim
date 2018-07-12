@@ -1,4 +1,5 @@
 import os
+import json
 import spacy
 from tqdm import tqdm
 
@@ -37,7 +38,9 @@ def save_json_list(tokenized_list, path):
 
 if __name__ == '__main__':
     training_list = read_pubmed_rct(os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'train.txt'))
+    dev_list = read_pubmed_rct(os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'dev.txt'))
     testing_list = read_pubmed_rct(os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'test.txt'))
 
     save_json_list(training_list, os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'train.json'))
+    save_json_list(dev_list, os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'dev.json'))
     save_json_list(testing_list, os.path.join('pubmed-rct', 'PubMed_200k_RCT', 'test.json'))
