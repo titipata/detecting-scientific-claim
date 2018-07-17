@@ -40,7 +40,7 @@ class CrfPubmedRCTReader(DatasetReader):
             for line in file:
                 if not line.startswith('#') and line.strip() != '':
                     label, sent = line.split('\t')
-                    sents.append(sent)
+                    sents.append(sent.strip())
                     labels.append(label)
                 elif len(sents) > 0 and len(labels) > 0:
                     yield self.text_to_instance(sents, labels)

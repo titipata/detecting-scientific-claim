@@ -52,6 +52,15 @@ allennlp predict \
     --predictor discourse_classifier
 ```
 
+To evaluate discourse model, you can run the following command
+
+```bash
+python -m allennlp.run \
+  evaluate output/model.tar.gz \
+  --evaluation-data-file https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json \
+  --include-package discourse
+```
+
 
 ## Predicting claim (web service)
 
