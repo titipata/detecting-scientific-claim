@@ -1,0 +1,8 @@
+project
+framework
+methodology
+algorithm
+approach
+system
+platform
+prototype
