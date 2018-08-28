@@ -39,6 +39,8 @@ class DiscourseCrfClassifier(Model):
             "accuracy3": CategoricalAccuracy(top_k=3)
         }
         self.loss = torch.nn.CrossEntropyLoss()
+        self.label_projection_layer = TimeDistributed(Linear(self.sentence_encoder.get_output_dim(), 
+                                                             self.num_classes))
         initializer(self)
 
     @overrides
@@ -46,14 +48,16 @@ class DiscourseCrfClassifier(Model):
                 sentences: Dict[str, torch.LongTensor],
                 labels: torch.LongTensor = None) -> Dict[str, torch.Tensor]:
         
-        embedded_sentences = [self.text_field_embedder(sentence) for sentence in sentences]
-        sentence_masks = [get_text_field_mask(sentence) for sentence in sentences]
+        print(sentences.size())
+        print(labels.size())
+
+        embedded_sentences = self.text_field_embedder(sentences)
+        sentence_masks = get_text_field_mask(sentences)
         encoded_sentences = self.sentence_encoder(embedded_sentences, sentence_masks)
 
-        logits = self.classifier_feedforward(encoded_sentences)
-
-        label_projection_layer = TimeDistributed(Linear(self.sentence_encoder.get_output_dim(), 
-                                                        self.num_classes))
+        print(encoded_sentences.size())
+        logits = self.tag_projection_layer(encoded_sentences)
+        
 
         output_dict = {'logits': logits}
         if labels is not None:
