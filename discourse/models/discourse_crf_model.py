@@ -46,10 +46,8 @@ class DiscourseCrfClassifier(Model):
                 sentences: Dict[str, torch.LongTensor],
                 labels: torch.LongTensor = None) -> Dict[str, torch.Tensor]:
         
-        print(sentences)
-        print(labels)
-        embedded_sentences = self.text_field_embedder(sentences)
-        sentence_masks = get_text_field_mask(sentences)
+        embedded_sentences = [self.text_field_embedder(sentence) for sentence in sentences]
+        sentence_masks = [get_text_field_mask(sentence) for sentence in sentences]
         encoded_sentences = self.sentence_encoder(embedded_sentences, sentence_masks)
 
         logits = self.classifier_feedforward(encoded_sentences)

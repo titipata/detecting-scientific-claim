@@ -38,7 +38,7 @@ class CrfPubmedRCTReader(DatasetReader):
             sents = []
             labels = []
             for line in file:
-                if not line.startswith('#') and line.strip() != '':
+                if not line.startswith('#') and line.strip() != '' and '\t' in line:
                     label, sent = line.split('\t')
                     sents.append(sent.strip())
                     labels.append(label)
