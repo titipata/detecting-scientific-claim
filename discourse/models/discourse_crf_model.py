@@ -9,7 +9,8 @@ import torch.nn.functional as F
 from allennlp.common import Params
 from allennlp.common.checks import check_dimensions_match
 from allennlp.data import Vocabulary
-from allennlp.modules import Seq2SeqEncoder, Seq2VecEncoder, TimeDistributed, TextFieldEmbedder, ConditionalRandomField, FeedForward
+from allennlp.modules import Seq2VecEncoder, TimeDistributed, TextFieldEmbedder, ConditionalRandomField, FeedForward
+from allennlp.modules.conditional_random_field import allowed_transitions
 from allennlp.models.model import Model
 from allennlp.nn import InitializerApplicator, RegularizerApplicator
 from allennlp.nn import util
@@ -39,6 +40,14 @@ class DiscourseCrfClassifier(Model):
         self.loss = torch.nn.CrossEntropyLoss()
         self.label_projection_layer = TimeDistributed(Linear(self.sentence_encoder.get_output_dim(), 
                                                              self.num_classes))
+        
+        labels = self.vocab.get_index_to_token_vocabulary("labels")
+        label_encoding = None
+        constraints = None # allowed_transitions(label_encoding, labels)
+        self.crf = ConditionalRandomField(
+            self.num_classes, constraints,
+            include_start_end_transitions=False
+        )
         initializer(self)
 
     @overrides
@@ -46,8 +55,8 @@ class DiscourseCrfClassifier(Model):
                 sentences: Dict[str, torch.LongTensor],
                 labels: torch.LongTensor = None) -> Dict[str, torch.Tensor]:
         
-        print(sentences['tokens'].size())
-        print(labels.size())
+        # print(sentences['tokens'].size())
+        # print(labels.size())
 
         embedded_sentences = self.text_field_embedder(sentences)
         sentence_masks = util.get_text_field_mask(sentences)
@@ -59,12 +68,22 @@ class DiscourseCrfClassifier(Model):
             encoded_sentences.append(self.sentence_encoder(embedded_sentences[:, i, :, :], sentence_masks))
         encoded_sentences = torch.stack(encoded_sentences, 1)
 
-        print(encoded_sentences.size()) # size: (n_batch, n_sents, n_embedding)
+        # print(encoded_sentences.size()) # size: (n_batch, n_sents, n_embedding)
 
         # TODO: add CRF layer before logits
         logits = self.label_projection_layer(encoded_sentences) # size: (n_batch, n_sents, n_classes)
 
-        output_dict = {'logits': logits}
+        # CRF prediction
+        best_paths = self.crf.viterbi_tags(logits, sentence_masks)
+        predicted_labels = [x for x, y in best_paths]
+
+        output_dict = {
+            "logits": logits, 
+            "mask": sentence_masks, 
+            "labels": predicted_labels
+        }
+        
+        # might have to check with https://github.com/allenai/allennlp/blob/master/allennlp/models/crf_tagger.py#L229-L239
         if labels is not None:
             loss = util.sequence_cross_entropy_with_logits(logits, labels, sentence_masks)
             for metric in self.metrics.values():
@@ -75,14 +94,14 @@ class DiscourseCrfClassifier(Model):
 
     @overrides
     def decode(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
-        class_probabilities = F.softmax(output_dict['logits'])
-        output_dict['class_probabilities'] = class_probabilities
-
-        predictions = class_probabilities.cpu().data.numpy()
-        argmax_indices = np.argmax(predictions, axis=-1)
-        labels = [self.vocab.get_token_from_index(x, namespace='labels')
-                  for x in argmax_indices]
-        output_dict['label'] = labels
+        """
+        Coverts tag ids to actual tags.
+        """
+        output_dict["labels"] = [
+            [self.vocab.get_token_from_index(label, namespace='labels')
+                 for label in instance_labels]
+                for instance_labels in output_dict["labels"]
+        ]
         return output_dict
 
     @overrides
