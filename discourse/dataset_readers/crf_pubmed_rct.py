@@ -38,7 +38,7 @@ class CrfPubmedRCTReader(DatasetReader):
             sents = []
             labels = []
             for line in file:
-                if not line.startswith('#') and line.strip() != '':
+                if not line.startswith('#') and line.strip() != '' and '\t' in line:
                     label, sent = line.split('\t')
                     sents.append(sent.strip())
                     labels.append(label)
@@ -60,10 +60,3 @@ class CrfPubmedRCTReader(DatasetReader):
         if labels is not None:
             fields['labels'] = SequenceLabelField(labels, sentence_sequence)
         return Instance(fields)
-
-    @classmethod
-    def from_params(cls, params: Params) -> 'CrfPubmedRCTDatasetReader':
-        tokenizer = Tokenizer.from_params(params.pop('tokenizer', {}))
-        token_indexers = TokenIndexer.dict_from_params(params.pop('token_indexers', {}))
-        params.assert_empty(cls.__name__)
-        return cls(tokenizer=tokenizer, token_indexers=token_indexers)
