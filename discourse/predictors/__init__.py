@@ -1,2 +1,3 @@
 from discourse.predictors.discourse_predictor import DiscourseClassifierPredictor
 from discourse.predictors.discourse_bnn_predictor import DiscourseBNNClassifierPredictor
+from discourse.predictors.discourse_crf_predictor import DiscourseCRFClassifierPredictor
