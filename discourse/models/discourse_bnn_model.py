@@ -122,34 +122,3 @@ class DiscourseBNNClassifier(Model):
     @overrides
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
         return {metric_name: metric.get_metric(reset) for metric_name, metric in self.metrics.items()}
-
-    @classmethod
-    def from_params(cls, vocab: Vocabulary, params: Params) -> 'BiattentiveClassificationNetwork':
-        embedder_params = params.pop("text_field_embedder")
-        text_field_embedder = TextFieldEmbedder.from_params(vocab, embedder_params)
-        embedding_dropout = params.pop("embedding_dropout")
-        pre_encode_feedforward = FeedForward.from_params(params.pop("pre_encode_feedforward"))
-        encoder = Seq2SeqEncoder.from_params(params.pop("encoder"))
-        integrator = Seq2SeqEncoder.from_params(params.pop("integrator"))
-        integrator_dropout = params.pop("integrator_dropout")
-
-        output_layer_params = params.pop("output_layer")
-        if "activations" in output_layer_params:
-            output_layer = FeedForward.from_params(output_layer_params)
-        else:
-            output_layer = Maxout.from_params(output_layer_params)
-
-        initializer = InitializerApplicator.from_params(params.pop('initializer', []))
-        regularizer = RegularizerApplicator.from_params(params.pop('regularizer', []))
-        params.assert_empty(cls.__name__)
-
-        return cls(vocab=vocab,
-                   text_field_embedder=text_field_embedder,
-                   embedding_dropout=embedding_dropout,
-                   pre_encode_feedforward=pre_encode_feedforward,
-                   encoder=encoder,
-                   integrator=integrator,
-                   integrator_dropout=integrator_dropout,
-                   output_layer=output_layer,
-                   initializer=initializer,
-                   regularizer=regularizer)

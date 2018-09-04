@@ -58,10 +58,3 @@ class PubmedRCTReader(DatasetReader):
         if label is not None:
             fields['label'] = LabelField(label)
         return Instance(fields)
-
-    @classmethod
-    def from_params(cls, params: Params) -> 'PubmedRCTDatasetReader':
-        tokenizer = Tokenizer.from_params(params.pop('tokenizer', {}))
-        token_indexers = TokenIndexer.dict_from_params(params.pop('token_indexers', {}))
-        params.assert_empty(cls.__name__)
-        return cls(tokenizer=tokenizer, token_indexers=token_indexers)

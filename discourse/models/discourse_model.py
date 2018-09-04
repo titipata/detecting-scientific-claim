@@ -72,20 +72,3 @@ class DiscourseClassifier(Model):
     @overrides
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
         return {metric_name: metric.get_metric(reset) for metric_name, metric in self.metrics.items()}
-
-    @classmethod
-    def from_params(cls, vocab: Vocabulary, params: Params) -> 'DiscourseClassifier':
-        embedder_params = params.pop('text_field_embedder')
-        text_field_embedder = TextFieldEmbedder.from_params(vocab, embedder_params)
-        sentence_encoder = Seq2VecEncoder.from_params(params.pop('sentence_encoder'))
-        classifier_feedforward = FeedForward.from_params(params.pop('classifier_feedforward'))
-
-        initializer = InitializerApplicator.from_params(params.pop('initializer', []))
-        regularizer = RegularizerApplicator.from_params(params.pop('regularizer', []))
-
-        return cls(vocab=vocab,
-                   text_field_embedder=text_field_embedder,
-                   sentence_encoder=sentence_encoder,
-                   classifier_feedforward=classifier_feedforward,
-                   initializer=initializer,
-                   regularizer=regularizer)

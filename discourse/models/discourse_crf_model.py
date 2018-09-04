@@ -70,10 +70,8 @@ class DiscourseCrfClassifier(Model):
 
         # print(encoded_sentences.size()) # size: (n_batch, n_sents, n_embedding)
 
-        # TODO: add CRF layer before logits
-        logits = self.label_projection_layer(encoded_sentences) # size: (n_batch, n_sents, n_classes)
-
         # CRF prediction
+        logits = self.label_projection_layer(encoded_sentences) # size: (n_batch, n_sents, n_classes)
         best_paths = self.crf.viterbi_tags(logits, sentence_masks)
         predicted_labels = [x for x, y in best_paths]
 
@@ -83,12 +81,18 @@ class DiscourseCrfClassifier(Model):
             "labels": predicted_labels
         }
         
-        # might have to check with https://github.com/allenai/allennlp/blob/master/allennlp/models/crf_tagger.py#L229-L239
+        # referring to https://github.com/allenai/allennlp/blob/master/allennlp/models/crf_tagger.py#L229-L239
         if labels is not None:
-            loss = util.sequence_cross_entropy_with_logits(logits, labels, sentence_masks)
+            log_likelihood = self.crf(logits, labels, sentence_masks)
+            output_dict["loss"] = -log_likelihood
+
+            class_probabilities = logits * 0.
+            for i, instance_labels in enumerate(predicted_labels):
+                for j, label_id in enumerate(instance_labels):
+                    class_probabilities[i, j, label_id] = 1
+
             for metric in self.metrics.values():
-                metric(logits, labels.squeeze(-1))
-            output_dict["loss"] = loss
+                metric(class_probabilities, labels, sentence_masks.float())
 
         return output_dict
 
