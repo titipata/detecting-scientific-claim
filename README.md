@@ -1,6 +1,7 @@
 # Claim Extraction for Scientific Publications
 
-Detecting claim from scientific publication using discourse and sentence embedding.
+Detecting claim from scientific publication using discourse and sentence embedding 
+powered by [AllenNLP](https://github.com/allenai/allennlp).
 
 
 ## Training discourse model
@@ -19,16 +20,16 @@ allennlp train experiments/pubmed_rct.json -s output --include-package discourse
 
 We point data location to Amazon S3 directly in `pubmed_rct.json`
 so you do not need to download the data locally. Change `cuda_device` to `-1` in `pubmed_rct.json`
-if you want to run on CPU.
+if you want to run on CPU. There are more experiments available in `experiments` folder.
 
 **Note** that you have to remove `output` folder first before running.
 
 
 ## Predicting discourse
 
-We trained the LSTM model on structured abstracts from Pubmed to predict
-discourse (`RESULTS`, `METHODS`, `CONCLUSIONS`, `BACKGROUND`, `OBJECTIVE`)
-from a given sentence. You can download trained model from Amazon S3
+We trained the Bidirectional LSTM model on structured abstracts from Pubmed to predict
+discourse probability (`RESULTS`, `METHODS`, `CONCLUSIONS`, `BACKGROUND`, `OBJECTIVE`)
+of a given sentence. You can download trained model from Amazon S3
 
 ```bash
 wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz
@@ -84,7 +85,7 @@ The interface will look something like this
   <img src="static/interface.png" width="600" />
 </p>
 
-And output will look like this (highlight means claim,
+And output will look something like the following (highlight means claim,
   tag behind the sentence is discourse prediction)
 
 <p float="left">
