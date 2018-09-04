@@ -13,7 +13,7 @@ from allennlp.data.tokenizers import Token, Tokenizer, WordTokenizer
 @DatasetReader.register("crf_pubmed_rct")
 class CrfPubmedRCTReader(DatasetReader):
     """
-    Reads a file from Pubmed RCT text file.
+    Reads a file from Pubmed RCT text file format. The line starting with '#' indicates the Pubmed ID.
 
     Parameters
     ----------

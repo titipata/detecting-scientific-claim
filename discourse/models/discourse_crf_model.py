@@ -85,10 +85,16 @@ class DiscourseCrfClassifier(Model):
         
         # might have to check with https://github.com/allenai/allennlp/blob/master/allennlp/models/crf_tagger.py#L229-L239
         if labels is not None:
-            loss = util.sequence_cross_entropy_with_logits(logits, labels, sentence_masks)
+            log_likelihood = self.crf(logits, tags, mask)
+            output["loss"] = -log_likelihood
+
+            class_probabilities = logits * 0.
+            for i, instance_labels in enumerate(predicted_labels):
+                for j, label_id in enumerate(instance_labels):
+                    class_probabilities[i, j, label_id] = 1
+
             for metric in self.metrics.values():
-                metric(logits, labels.squeeze(-1))
-            output_dict["loss"] = loss
+                metric(class_probabilities, labels, mask.float())
 
         return output_dict
 
