@@ -5,6 +5,7 @@
   "train_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/train.json",
   "validation_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/dev.json",
   "test_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json",
+  "evaluate_on_test": true,
   "model": {
     "type": "discourse_bnn_classifier",
     "text_field_embedder": {
