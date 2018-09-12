@@ -1,3 +1,6 @@
+import os
+import sys
+import json
 from itertools import chain
 from lxml import etree, html
 from urllib.request import urlopen
@@ -32,3 +35,23 @@ def parse_pubmed_xml(pmid):
     title = ' '.join([e.text for e in tree.xpath('//articletitle')
                      if e is not None])
     return {'title': title, 'abstract': abstract}
+
+
+def read_json(file_path):
+    """
+    Read collected file from path
+    """
+    if not os.path.exists(file_path):
+        return []
+    else:
+        with open(file_path, 'r') as fp:
+            ls = [json.loads(line) for line in fp]
+        return ls
+
+
+def save_json(ls, file_path):
+    """
+    Save list of dictionary to JSON
+    """
+    with open(file_path, 'w') as fp:
+        fp.write('\n'.join(json.dumps(i) for i in ls))

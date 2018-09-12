@@ -32,7 +32,7 @@ if not TESTING:
     from discourse.models import DiscourseClassifier
 
     from allennlp.models.archival import load_archive
-    from allennlp.service.predictors import Predictor
+    from allennlp.predictors import Predictor
     from allennlp.common.file_utils import cached_path
 
     archive = load_archive(DISCOURSE_MODEL_PATH) # discourse model
