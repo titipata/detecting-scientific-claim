@@ -12,15 +12,8 @@ class DiscourseCRFClassifierPredictor(Predictor):
     Predictor wrapper for the DiscourseClassifier
     """
     @overrides
-    def _json_to_instance(self, json_dict: JsonDict) -> Tuple[Instance, JsonDict]:
+    def _json_to_instance(self, json_dict: JsonDict) -> Instance:
         abstract = json_dict["abstract"]
         sentences = [sent.text.strip() for sent in abstract.sents]
         instance = self._dataset_reader.text_to_instance(sentences=sentences)
-
-        # label_dict will be like {0: "RESULTS", 1: "METHODS", ...}
-        label_dict = self._model.vocab.get_index_to_token_vocabulary('labels')
-
-        # Convert it to list ["RESULTS", "METHODS", "CONCLUSIONS", "BACKGROUND", "OBJECTIVE"]
-        all_labels = [label_dict[i] for i in range(len(label_dict))]
-
-        return instance, {'all_labels': all_labels}
+        return instance
