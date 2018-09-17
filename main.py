@@ -10,7 +10,7 @@ import pandas as pd
 from nltk import word_tokenize, sent_tokenize
 
 from lxml import etree, html
-from urllib.request import urlopen
+import urllib
 
 import flask
 from flask import Flask, request
@@ -73,7 +73,7 @@ def parse_pubmed_xml(pmid):
     Parse article information for the given PMID
     """
     url = PUBMED_URL % pmid
-    page = urlopen(url).read()
+    page = urllib.request.urlopen(url).read()
     tree = html.fromstring(page)
     abstract = ''
     for e in tree.xpath('//abstract/abstracttext'):
