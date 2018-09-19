@@ -1,0 +1,50 @@
+{
+    "dataset_reader": {
+      "type": "pubmed_rct"
+    },
+    "train_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/train.json",
+    "validation_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/dev.json",
+    "test_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json",
+    "evaluate_on_test": true,
+    "model": {
+      "type": "discourse_classifier",
+      "text_field_embedder": {
+        "tokens": {
+          "type": "embedding",
+          "pretrained_file": "https://s3-us-west-2.amazonaws.com/pubmed-rct/wikipedia-pubmed-and-PMC-w2v.txt.gz",
+          "embedding_dim": 200,
+          "trainable": false
+        }
+      },
+      "sentence_encoder": {
+        "type": "lstm",
+        "bidirectional": true,
+        "input_size": 200,
+        "hidden_size": 200,
+        "num_layers": 1,
+        "dropout": 0.2
+      },
+      "classifier_feedforward": {
+        "input_dim": 400,
+        "num_layers": 2,
+        "hidden_dims": [200, 5],
+        "activations": ["relu", "linear"],
+        "dropout": [0.2, 0.0]
+      }
+    },
+    "iterator": {
+      "type": "bucket",
+      "sorting_keys": [["sentence", "num_tokens"]],
+      "batch_size": 64
+    },
+    "trainer": {
+      "num_epochs": 40,
+      "patience": 10,
+      "cuda_device": 0,
+      "grad_clipping": 5.0,
+      "validation_metric": "+accuracy",
+      "optimizer": {
+        "type": "adagrad"
+      }
+    }
+  }
