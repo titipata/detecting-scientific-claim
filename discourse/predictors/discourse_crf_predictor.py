@@ -18,5 +18,5 @@ class DiscourseCRFClassifierPredictor(Predictor):
         abstract = json_dict["abstract"]
         abstract = nlp(abstract)
         sentences = [sent.text.strip() for sent in abstract.sents]
-        instance = self._dataset_reader.text_to_instance(sentences=sentences)
+        instance = self._dataset_reader.text_to_instance(sents=sentences)
         return instance
