@@ -5,7 +5,7 @@ import json
 import yaml
 import numpy as np
 from nltk import sent_tokenize
-from utils import *
+from utils import parse_pubmed_xml, read_json, save_json
 
 import flask
 import flask_login
@@ -15,8 +15,14 @@ from flask import Flask, request, session
 params = yaml.load(open("params.yaml", "r"))
 PMIDS_PATH = params['pmids_path']
 OUTPUT_PATH = params['output_path']
-with open(PMIDS_PATH, 'r') as f:
-    pmids = [l.strip() for l in f.readlines()]
+
+if PMIDS_PATH.lower().endswith('.txt'):
+    with open(PMIDS_PATH, 'r') as f:
+        pmids = [l.strip() for l in f.readlines()]
+elif PMIDS_PATH.lower().endswith('.json'):
+    pmids_json = read_json(PMIDS_PATH)
+    pmids = [str(p['paper_id']) for p in pmids_json]
+    pmids_json_map = {int(p['paper_id']): p for p in pmids_json} # map from pmid to details
 NUM_PMIDS = len(pmids)
 
 app = Flask(__name__,
@@ -25,27 +31,6 @@ app.secret_key = 'made in Thailand.'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-
-
-def read_json(file_path):
-    """
-    Read collected file from path
-    """
-    if not os.path.exists(file_path):
-        collected_data = []
-        return collected_data
-    else:
-        with open(file_path, 'r') as fp:
-            collected_data = [json.loads(line) for line in fp]
-        return collected_data
-
-
-def save_json(ls, file_path):
-    """
-    Save list of dictionary to JSON
-    """
-    with open(file_path, 'w') as fp:
-        fp.write('\n'.join(json.dumps(i) for i in ls))
 
 
 def check_ids(collected_data, user_id, tagged=False):
@@ -128,14 +113,22 @@ def tag_paper_id(paper_id):
     """
     Tag the given PMID (paper_id)
     """
-    data = parse_pubmed_xml(paper_id)
-    sentences = sent_tokenize(data['abstract'])
-    data.update({
-        'paper_id': paper_id,
-        'sentences': sentences,
-        'enumerate': enumerate,
-        'zip': zip,
-    })
+    if PMIDS_PATH.lower().endswith('.txt'):
+        data = parse_pubmed_xml(paper_id)
+        sentences = sent_tokenize(data['abstract'])
+        data.update({
+            'paper_id': paper_id,
+            'sentences': sentences,
+            'enumerate': enumerate,
+            'zip': zip,
+        })
+    elif PMIDS_PATH.lower().endswith('.json'):
+        data = pmids_json_map[int(paper_id)]
+        data['paper_id'] = str(data['paper_id'])
+        data.update({
+            'enumerate': enumerate,
+            'zip': zip,
+        })
     # progress
     collected_data = read_json(OUTPUT_PATH)
     pmids_tagged = check_ids(collected_data, session['email'], tagged=True)
@@ -151,15 +144,26 @@ def handle_submit():
     """
     labels = [int(label) for label in request.form.getlist('labels')]
     user_id = session.get('email', '')
-    paper_id = request.form['paper_id']
-    data = parse_pubmed_xml(paper_id)
-    sentences = sent_tokenize(data['abstract'])
-    data.update({
-        'paper_id': paper_id,
-        'user_id': user_id,
-        'sentences': sentences,
-        'labels': [int(s in labels) for s in np.arange(len(sentences))]
-    })
+    if PMIDS_PATH.lower().endswith('.txt'):
+        paper_id = request.form['paper_id']
+        data = parse_pubmed_xml(paper_id)
+        sentences = sent_tokenize(data['abstract'])
+        data.update({
+            'paper_id': paper_id,
+            'user_id': user_id,
+            'sentences': sentences,
+            'labels': [int(s in labels) for s in np.arange(len(sentences))]
+        })
+    elif PMIDS_PATH.lower().endswith('.json'):
+        paper_id = request.form['paper_id']
+        data = pmids_json_map[int(paper_id)]
+        data['paper_id'] = str(data['paper_id'])
+        data.update({
+            'user_id': user_id,
+            'labels': [int(s in labels) for s in np.arange(len(data['sentences']))]
+        })
+        data.pop('enumerate', None)
+        data.pop('zip', None)
     # save data
     collected_data = read_json(OUTPUT_PATH)
     collected_data = remove_previous(collected_data,

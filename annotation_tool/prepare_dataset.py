@@ -13,7 +13,7 @@ import spacy
 
 
 nlp = spacy.load('en_core_web_sm')
-STRUCTURE_ABSTRACT = ['INTRODUCTION', 'BACKGROUND', 'METHOD', 'RESULT', 'OBJECTIVE']
+STRUCTURE_ABSTRACT = ['INTRODUCTION', 'BACKGROUND', 'METHOD', 'RESULT', 'OBJECTIVE', 'CONCLUSION']
 
 def parse_medline_articles(path='medline', 
                            saved_path='parsed_articles', 
@@ -125,19 +125,37 @@ def calculate_n_sents(abstract):
     
 
 def sample_articles(parsed_papers, 
-                    n_sample=3000, 
-                    random_state=1302, 
+                    n_sample=20, 
+                    random_state=5, 
                     n_sents_max=15, 
                     n_sents_min=5):
     """
     Given a list of articles, sample articles for annotation task
+
+    Input
+    =====
+    n_sample: int, number of sample per venue
+    random_state: int, random state
+    n_sents_max: maximum number of sentence
+    n_sents_min: minimum number of sentence
     """
     article_df = pd.DataFrame(parsed_papers)
     article_df.dropna(axis=0, subset=['abstract', 'pmid'], inplace=True)
-    sample_abstract_df = article_df.sample(n=n_sample, random_state=random_state)
-    sample_abstract_df['is_structured_abstract'] = sample_abstract_df['abstract'].map(is_structured_abstract)
-    sample_abstract_df = sample_abstract_df[~sample_abstract_df.is_structured_abstract]
-    sample_abstract_df['pmid'] = sample_abstract_df['pmid'].map(int)
-    sample_abstract_df['n_sents'] = sample_abstract_df['abstract'].map(calculate_n_sents)
-    sample_abstract_df = sample_abstract_df[(sample_abstract_df.n_sents >= n_sents_min) & (sample_abstract_df.n_sents <= n_sents_max)]
-    return sample_abstract_df
+
+    journal_df = abstract_df.groupby('journal').size().reset_index().rename(columns={0: 'n_journal'}).sort_values('n_journal', ascending=False).head(200)
+    journal_df = journal_df[journal_df.journal.map(lambda x: 'review' not in x.lower())]
+    article_df = article_df.merge(journal_df, on='journal')
+    article_df['is_structured_abstract'] = article_df.abstract.map(is_structured_abstract)
+    article_df = article_df[~article_df.is_structured_abstract]
+
+    df_sample_list = []
+    for _, df in article_df.groupby('journal'):
+        try:
+            df_sample = df.sample(n=n_sample, random_state=random_state)
+            df_sample['n_sents'] = df_sample.abstract.map(calculate_n_sents)
+            df_sample_list.append(df_sample[(df_sample.n_sents >= n_sents_min) & (df_sample.n_sents <= n_sents_max)].head(8))
+        except:
+            pass
+    df_sample_all = pd.concat(df_sample_list)
+
+    return df_sample_all.sample(n=len(df_sample_all)) # shuffle dataframe

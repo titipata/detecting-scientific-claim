@@ -1,5 +1,5 @@
-# path to PMIDs to tag
-pmids_path: data/pmids.txt
+# path to PMIDs to tag (can be .txt file of PMIDs or .json file where each line contains all information, see data/ for more detail)
+pmids_path: data/pmids.json
 
 # output labels for tag
 output_path: data/labels.json
