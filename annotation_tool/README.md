@@ -8,7 +8,9 @@ annotation tool that we made to collect claim dataset.
 
 All parameters are located in `params.yaml` include the following
 
-- `pmids_path` is a path to list of PMIDs that you want to tag, default as `data/pmids.txt`
+- `pmids_path` is a path to list of PMIDs or JSON file of PMIDs that you want to tag, 
+default as `data/pmids.json` or `data/pmids.txt`. JSON file has to have the following keys: 
+`paper_id`, `title`, `abstract`, `sentences`
 - `labels` is a list of labels that you want to annotate
 - `output_path` is a path to output file, default as `data/labels.json`
 
@@ -17,7 +19,7 @@ After editing YAML file, you can run `flask` to start the annotation tool.
 
 ```bash
 export FLASK_APP=main.py
-flask run --host=0.0.0.0 # this will serve at port 5000
+flask run --host=0.0.0.0 --port=5555 # this will serve at port 5555
 ```
 
 The data will be saved in default location at `data/labels.json` where
