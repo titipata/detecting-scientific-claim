@@ -15,6 +15,7 @@ from flask import Flask, request, session
 params = yaml.load(open("params.yaml", "r"))
 PMIDS_PATH = params['pmids_path']
 OUTPUT_PATH = params['output_path']
+STORE_DETAILS = params['store_details']
 
 if PMIDS_PATH.lower().endswith('.txt'):
     with open(PMIDS_PATH, 'r') as f:
@@ -164,6 +165,10 @@ def handle_submit():
         })
         data.pop('enumerate', None)
         data.pop('zip', None)
+        if STORE_DETAILS != 1:
+            data.pop('title', None)
+            data.pop('abstract', None)
+            data.pop('sentences', None)
     # save data
     collected_data = read_json(OUTPUT_PATH)
     collected_data = remove_previous(collected_data,

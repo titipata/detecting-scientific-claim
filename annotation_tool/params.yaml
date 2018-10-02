@@ -8,6 +8,11 @@ output_path: data/labels.json
 labels:
   - CLAIM
 
+# 1 if storing full dataset, 0 if storing only tags
+store_details:
+  - 0
+
+
 # default colors for each label
 colors:
   - ff7f7f

@@ -13,6 +13,7 @@ default as `data/pmids.json` or `data/pmids.txt`. JSON file has to have the foll
 `paper_id`, `title`, `abstract`, `sentences`
 - `labels` is a list of labels that you want to annotate
 - `output_path` is a path to output file, default as `data/labels.json`
+- `store_details` is an integer defined if we want to store full tags information or only labels
 
 The instructions for annotators can be edited in `flask_templates/index.html`.
 After editing YAML file, you can run `flask` to start the annotation tool.
