@@ -10,9 +10,7 @@ The Journal of neuroscience : the official journal of the Society for Neuroscien
 International journal of molecular sciences
 Journal of virology
 Nucleic acids research
-Environmental science & technology
 Journal of immunology (Baltimore, Md. : 1950)
-Zootaxa
 Medicine
 BMC public health
 Journal of nanoscience and nanotechnology
@@ -23,8 +21,6 @@ Antimicrobial agents and chemotherapy
 Nature
 Vaccine
 NeuroImage
-Applied and environmental microbiology
-Environmental science and pollution research international
 Asian Pacific journal of cancer prevention : APJCP
 Genetics and molecular research : GMR
 BMC cancer
@@ -76,7 +72,6 @@ BMC health services research
 Oncogene
 Medical physics
 BMC infectious diseases
-Annals of surgical oncology
 Evidence-based complementary and alternative medicine : eCAM
 Journal of chemical theory and computation
 Neurology
