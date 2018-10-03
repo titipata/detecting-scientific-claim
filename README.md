@@ -6,13 +6,7 @@ powered by [AllenNLP](https://github.com/allenai/allennlp).
 
 ## Training discourse model
 
-Running AllenNLP to train discourse model as follows
-
-```bash
-python -m allennlp.run train experiments/pubmed_rct.json -s output --include-package discourse
-```
-
-or
+Running AllenNLP to train a discourse model as follows
 
 ```bash
 allennlp train experiments/pubmed_rct.json -s output --include-package discourse
@@ -46,8 +40,7 @@ simply run the following to predict labels.
 
 
 ```bash
-allennlp predict \
-    model.tar.gz \
+allennlp predict output/model.tar.gz \
     pubmed-rct/PubMed_200k_RCT/fixtures.json \
     --include-package discourse \
     --predictor discourse_classifier
@@ -56,8 +49,7 @@ allennlp predict \
 To evaluate discourse model, you can run the following command
 
 ```bash
-python -m allennlp.run \
-  evaluate output/model.tar.gz \
+allennlp evaluate output/model.tar.gz \
   --evaluation-data-file https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json \
   --include-package discourse
 ```
