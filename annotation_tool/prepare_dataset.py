@@ -119,14 +119,6 @@ def is_structured_abstract(abstract):
         return False
 
 
-def calculate_n_sents(abstract):
-    """
-    Calculate number of sentences in a given abstract
-    """
-    abstract = nlp(abstract)
-    return len([sent for sent in abstract.sents])
-    
-
 def sample_articles(parsed_papers, 
                     n_sample=3000, 
                     random_state=10, 
