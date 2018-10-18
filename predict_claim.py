@@ -18,11 +18,13 @@ from allennlp.data.tokenizers import Token, Tokenizer, WordTokenizer
 from discourse.predictors.discourse_crf_predictor import DiscourseCRFClassifierPredictor
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+from sklearn.decomposition import TruncatedSVD
 
 
 MEDLINE_WORD_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/medline_word_prob.json'
 DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf.tar.gz'
 PUBMED_PRETRAINED_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/wikipedia-pubmed-and-PMC-w2v.txt.gz'
+EMBEDDING_DIM = 200
 
 p_dict = json.load(open(cached_path(MEDLINE_WORD_PATH), 'r'))
 archive = load_archive(DISCOURSE_MODEL_PATH) # discourse model
@@ -85,6 +87,22 @@ def text_to_instance(sents: List[str], labels: List[str] = None):
     return Instance(fields)
 
 
+def calculate_pc(X, n_comp=1):
+    """
+    Calculate first principal component from the given matrix X
+    """
+    svd = TruncatedSVD(n_components=n_comp, n_iter=100, random_state=0)
+    svd.fit(X)
+    return svd.components_
+
+
+def remove_pc(x, pc):
+    """
+    Remove first principal component from an array
+    """
+    return x - x.dot(pc.transpose()) * pc
+
+
 if __name__ == '__main__':
     # read training dataset in JSON format
     # annotation: {}
@@ -105,6 +123,11 @@ if __name__ == '__main__':
         labels.append(label)
     X = torch.cat(features)
     y = torch.cat(labels)
+    X_sents = np.array(X[:, :EMBEDDING_DIM])
+    X_discourse = np.array(X[:, EMBEDDING_DIM:])
+    pc = calculate_pc(X_sents)
+    X_sents = np.vstack([remove_pc(x_sent, pc) for x_sent in X_sents])
+    X = np.hstack((X_sents, ))
     
     logist_model = LogisticRegression()
     logist_model.fit(X, y)
