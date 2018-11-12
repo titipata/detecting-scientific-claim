@@ -71,10 +71,15 @@ if __name__ == '__main__':
 
     model = predictor._model
     model.classifier_feedforward._linear_layers = ModuleList([torch.nn.Linear(600, 300), torch.nn.Linear(300, 2)])
+    vocab = predictor._model.vocab
+    vocab._token_to_index['labels'] = {'0': 0, '1': 1}
+    # freeze all layers except top layer
+    for param in list(model.parameters())[:-4]:
+        param.requires_grad = False
     optimizer = optim.SGD(model.parameters(), lr=0.001)
     iterator = BucketIterator(batch_size=64, 
                           sorting_keys=[("sentence", "num_tokens")])
-    iterator.index_with(predictor._model.vocab)
+    iterator.index_with(vocab)
 
     reader = ClaimDatasetReader()
     train_dataset = reader.read(cached_path(SAMPLE_TRAINING_PATH))
