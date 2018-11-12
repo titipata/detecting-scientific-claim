@@ -2,9 +2,11 @@
 Transfer learning for claim prediction. Run this script with `discourse` folder,
 """
 from typing import Iterator, List, Dict, Optional
+import numpy as np
 import pandas as pd
 from itertools import chain
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
 
 import torch
 import torch.optim as optim
@@ -18,6 +20,7 @@ from discourse.models import DiscourseClassifier
 from allennlp.models.archival import load_archive
 from allennlp.predictors import Predictor
 from allennlp.common.file_utils import cached_path
+from allennlp.common.util import JsonDict
 
 from allennlp.data.fields import TextField, LabelField
 from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
@@ -64,6 +67,16 @@ class ClaimDatasetReader(DatasetReader):
         return Instance(fields)
 
 
+class ClaimClassifierPredictor(Predictor):
+    """"
+    Predictor wrapper for the claim prediction task
+    """
+    def _json_to_instance(self, json_dict: JsonDict) -> Instance:
+        sentence = json_dict['sentence']
+        instance = self._dataset_reader.text_to_instance(sentence=sentence)
+        return instance
+
+
 if __name__ == '__main__':
     """
     Download pretrained discourse model and use it to train claim prediction model
@@ -90,7 +103,7 @@ if __name__ == '__main__':
     train_dataset = reader.read(cached_path(SAMPLE_TRAINING_PATH))
     validation_dataset = reader.read(cached_path(SAMPLE_VALIDATION_PATH))
 
-    # train unfreeze top layers
+    # unfreeze top layers and train
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
@@ -99,7 +112,7 @@ if __name__ == '__main__':
         train_dataset=train_dataset,
         validation_dataset=validation_dataset,
         patience=5,
-        num_epochs=40, 
+        num_epochs=100, 
         cuda_device=-1
     )
     trainer.train()
@@ -107,4 +120,22 @@ if __name__ == '__main__':
     # unfreeze all layers and train
     for param in list(model.parameters())[1:]:
         param.requires_grad = True
+    trainer = Trainer(
+        model=model,
+        optimizer=optimizer,
+        iterator=iterator,
+        validation_iterator=iterator,
+        train_dataset=train_dataset,
+        validation_dataset=validation_dataset,
+        patience=5,
+        num_epochs=87, 
+        cuda_device=-1
+    )
     trainer.train()
+
+    # print out validation F-score
+    claim_predictor = ClaimClassifierPredictor(model, dataset_reader=reader)
+    validation_df = pd.read_csv(cached_path(SAMPLE_VALIDATION_PATH))
+    validation_df['class_probabilities'] = validation_df.sentence.map(lambda x: claim_predictor.predict_json({'sentence': x})['class_probabilities'])
+    validation_df['predicted_label'] = validation_df.class_probabilities.map(lambda x: np.argmax(x))
+    print(f1_score(validation_df.label, validation_df.predicted_label))
