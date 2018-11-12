@@ -1,5 +1,5 @@
 """
-Run with `discourse` folder,
+Transfer learning for claim prediction. Run this script with `discourse` folder,
 """
 from typing import Iterator, List, Dict, Optional
 import pandas as pd
@@ -31,6 +31,9 @@ from allennlp.training.trainer import Trainer
 
 
 class ClaimDatasetReader(DatasetReader):
+    """
+    Sentence reader for Claim dataset
+    """
     def __init__(self, 
                  tokenizer: Tokenizer = None,
                  token_indexers: Dict[str, TokenIndexer] = None, 
@@ -62,7 +65,9 @@ class ClaimDatasetReader(DatasetReader):
 
 
 if __name__ == '__main__':
-
+    """
+    Download pretrained discourse model and use it to train claim prediction model
+    """
     DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz'
     SAMPLE_TRAINING_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/sample_training.csv'
     SAMPLE_VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/sample_validation.csv'
@@ -78,21 +83,28 @@ if __name__ == '__main__':
         param.requires_grad = False
     optimizer = optim.SGD(model.parameters(), lr=0.001)
     iterator = BucketIterator(batch_size=64, 
-                          sorting_keys=[("sentence", "num_tokens")])
+                              sorting_keys=[("sentence", "num_tokens")])
     iterator.index_with(vocab)
 
     reader = ClaimDatasetReader()
     train_dataset = reader.read(cached_path(SAMPLE_TRAINING_PATH))
     validation_dataset = reader.read(cached_path(SAMPLE_VALIDATION_PATH))
 
+    # train unfreeze top layers
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
         iterator=iterator,
+        validation_iterator=iterator,
         train_dataset=train_dataset,
         validation_dataset=validation_dataset,
-        patience=2,
-        num_epochs=5, 
+        patience=5,
+        num_epochs=40, 
         cuda_device=-1
     )
+    trainer.train()
+
+    # unfreeze all layers and train
+    for param in list(model.parameters())[1:]:
+        param.requires_grad = True
     trainer.train()
