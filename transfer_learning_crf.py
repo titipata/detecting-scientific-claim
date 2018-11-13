@@ -21,7 +21,7 @@ from allennlp.models.archival import load_archive
 from allennlp.predictors import Predictor
 from allennlp.common.file_utils import cached_path
 
-from allennlp.data.fields import TextField, LabelField, ListField, SequenceLabelField
+from allennlp.data.fields import Field, TextField, LabelField, ListField, SequenceLabelField
 from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
 from allennlp.data.tokenizers import Token, Tokenizer, WordTokenizer
 from allennlp.data.vocabulary import Vocabulary
@@ -160,5 +160,5 @@ if __name__ == '__main__':
                                             torch.LongTensor(pred['mask']))
         predicted_labels = [x[0] for x, y in best_paths]
         y_pred.extend(predicted_labels)
-        y_true.extend(val['labels'])
+        y_true.extend([int(l) for l in val['labels']])
     print(f1_score(y_true, y_pred))
