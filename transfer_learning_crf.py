@@ -156,9 +156,9 @@ if __name__ == '__main__':
     for val in validation_dataset:
         pred = claim_predictor.predict_instance(val)
         logits = torch.FloatTensor(pred['logits'])
-        best_paths = model.crf.viterbi_tags(torch.FloatTensor(pred['logits']).unsqueeze(1), 
-                                            torch.LongTensor(pred['mask']))
-        predicted_labels = [x[0] for x, y in best_paths]
+        best_paths = model.crf.viterbi_tags(torch.FloatTensor(pred['logits']).unsqueeze(0), 
+                                            torch.LongTensor(pred['mask']).unsqueeze(0))
+        predicted_labels = best_paths[0][0]
         y_pred.extend(predicted_labels)
         y_true.extend([int(l) for l in val['labels']])
     print(f1_score(y_true, y_pred))
