@@ -58,8 +58,6 @@ class User(flask_login.UserMixin):
 
 @login_manager.user_loader
 def user_loader(email):
-    if email not in users:
-        return
     user = User()
     user.id = email
     return user

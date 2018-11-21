@@ -132,6 +132,7 @@ pubmed-rct/PubMed_200k_RCT/*.json
 output/*
 expert_tags/*
 medline/*
-model.tar.gz
+model*.tar.gz
 wiki.en.bin
 labels.json
+wiki.en.zip

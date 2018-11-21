@@ -41,8 +41,6 @@ class DiscourseCrfClassifier(Model):
         self.label_projection_layer = TimeDistributed(Linear(self.sentence_encoder.get_output_dim(), 
                                                              self.num_classes))
         
-        labels = self.vocab.get_index_to_token_vocabulary("labels")
-        label_encoding = None
         constraints = None # allowed_transitions(label_encoding, labels)
         self.crf = ConditionalRandomField(
             self.num_classes, constraints,
