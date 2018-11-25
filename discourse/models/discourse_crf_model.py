@@ -59,13 +59,13 @@ class DiscourseCrfClassifier(Model):
         # print(labels.size())
 
         embedded_sentences = self.text_field_embedder(sentences)
-        sentence_masks = util.get_text_field_mask(sentences)
+        sentence_masks = util.get_text_field_mask(sentences, 1)
 
         # get sentence embedding
         encoded_sentences = []
         n_sents = embedded_sentences.size()[1] # size: (n_batch, n_sents, n_tokens, n_embedding)
         for i in range(n_sents):
-            encoded_sentences.append(self.sentence_encoder(embedded_sentences[:, i, :, :], sentence_masks))
+            encoded_sentences.append(self.sentence_encoder(embedded_sentences[:, i, :, :], sentence_masks[:, i, :]))
         encoded_sentences = torch.stack(encoded_sentences, 1)
 
         # print(encoded_sentences.size()) # size: (n_batch, n_sents, n_embedding)
