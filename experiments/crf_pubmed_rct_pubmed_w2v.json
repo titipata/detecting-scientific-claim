@@ -33,8 +33,7 @@
       }
     },
     "iterator": {
-      "type": "bucket",
-      "sorting_keys": [["sentences", "num_fields"]],
+      "type": "basic",
       "batch_size": 64
     },
     "trainer": {
