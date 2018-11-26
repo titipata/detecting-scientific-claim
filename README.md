@@ -26,7 +26,7 @@ discourse probability (`RESULTS`, `METHODS`, `CONCLUSIONS`, `BACKGROUND`, `OBJEC
 of a given sentence. You can download trained model from Amazon S3
 
 ```bash
-wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz
+wget https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz # or model_crf.tar.gz for pretrained model with CRF layer
 ```
 
 and run web service for discourse prediction task as follow
@@ -38,12 +38,20 @@ bash web_service.sh
 To test the train model with provided examples [`fixtures.json`](pubmed-rct/PubMed_200k_RCT/fixtures.json),
 simply run the following to predict labels.
 
-
 ```bash
 allennlp predict output/model.tar.gz \
     pubmed-rct/PubMed_200k_RCT/fixtures.json \
     --include-package discourse \
     --predictor discourse_classifier
+```
+
+or run the following for 
+
+```
+allennlp predict output/model_crf.tar.gz \
+    pubmed-rct/PubMed_200k_RCT/fixtures_crf.json \
+    --include-package discourse \
+    --predictor discourse_crf_classifier
 ```
 
 To evaluate discourse model, you can run the following command
