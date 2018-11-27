@@ -40,7 +40,7 @@ DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.
 TRAIN_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/train_labels.csv'
 VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/validation_labels.csv'
 archive = load_archive(DISCOURSE_MODEL_PATH)
-predictor = Predictor.from_archive(archive, 'discourse_classifier')
+predictor = Predictor.from_archive(archive, 'discourse_predictor')
 
 
 def flatten_dataset(df):

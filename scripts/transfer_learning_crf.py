@@ -48,7 +48,7 @@ VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/validation_labe
 TEST_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/test_labels.json'
 DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf.tar.gz'
 archive = load_archive(DISCOURSE_MODEL_PATH)
-discourse_predictor = Predictor.from_archive(archive, 'discourse_crf_classifier')
+discourse_predictor = Predictor.from_archive(archive, 'discourse_crf_predictor')
 
 
 class ClaimCrfPredictor(Predictor):
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         validation_iterator=iterator,
         train_dataset=train_dataset,
         validation_dataset=validation_dataset,
-        patience=5,
+        patience=3,
         num_epochs=100, 
         cuda_device=-1
     )
@@ -110,14 +110,14 @@ if __name__ == '__main__':
         validation_iterator=iterator,
         train_dataset=train_dataset,
         validation_dataset=validation_dataset,
-        patience=5,
+        patience=3,
         num_epochs=100,
         cuda_device=-1
     )
     trainer.train()
 
     # precision, recall, f-score on validation set
-    validation_list = read_json(VALIDATION_PATH)
+    validation_list = read_json(cached_path(VALIDATION_PATH))
     claim_predictor = ClaimCrfPredictor(model, dataset_reader=reader)
     y_pred, y_true = [], []
     for val in validation_list:
@@ -129,5 +129,5 @@ if __name__ == '__main__':
         y_pred.extend(predicted_labels)
         y_true.extend(val['labels'])
     y_true = np.array(y_true).astype(int)
-    y_pred = np.array(y_pred)
+    y_pred = np.array(y_pred).astype(int)
     print(precision_recall_fscore_support(y_true, y_pred, average='binary'))

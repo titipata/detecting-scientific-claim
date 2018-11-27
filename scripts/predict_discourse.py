@@ -18,7 +18,7 @@ from allennlp.service.predictors import Predictor
 
 MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz'
 archive = load_archive(cached_path(MODEL_PATH))
-predictor = Predictor.from_archive(archive, 'discourse_classifier')
+predictor = Predictor.from_archive(archive, 'discourse_predictor')
 
 if __name__ == '__main__':
     fixture_path = os.path.join('..', 'pubmed-rct', 'PubMed_200k_RCT', 'fixtures.json')
