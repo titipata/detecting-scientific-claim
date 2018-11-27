@@ -8,7 +8,7 @@ from allennlp.predictors.predictor import Predictor
 
 nlp = spacy.load('en_core_web_sm')
 
-@Predictor.register('discourse_crf_classifier')
+@Predictor.register('discourse_crf_predictor')
 class DiscourseCRFClassifierPredictor(Predictor):
     """"
     Predictor wrapper for the DiscourseClassifier

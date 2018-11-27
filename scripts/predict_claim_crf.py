@@ -26,7 +26,7 @@ from discourse.predictors import DiscourseClassifierPredictor
 DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf.tar.gz'
 WEIGHT_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf_tf.th'
 archive = load_archive(DISCOURSE_MODEL_PATH)
-discourse_predictor = Predictor.from_archive(archive, 'discourse_crf_classifier')
+discourse_predictor = Predictor.from_archive(archive, 'discourse_crf_predictor')
 EMBEDDING_DIM = 200
 
 

@@ -39,7 +39,7 @@ VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/validation_labe
 TEST_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/test_labels.json'
 
 archive = load_archive(DISCOURSE_MODEL_PATH) # discourse model
-predictor = Predictor.from_archive(archive, 'discourse_classifier')
+predictor = Predictor.from_archive(archive, 'discourse_predictor')
 assert os.path.exists('wiki.en.bin') == True
 ft_model = load_model('wiki.en.bin') # fastText word vector
 p_dict = json.load(open(cached_path(MEDLINE_WORD_PATH), 'r'))

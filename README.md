@@ -65,14 +65,7 @@ allennlp evaluate output/model.tar.gz \
 
 ## Predicting claim (web service)
 
-First, download fastText pre-trained word vector
-
-```bash
-wget https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
-```
-
-then unzip it, and put `wiki.en.bin` in this folder. Now, you can run `flask`
-application to detect claims as follows
+You can run the web application to detect claims as follows
 
 ```bash
 export FLASK_APP=main.py

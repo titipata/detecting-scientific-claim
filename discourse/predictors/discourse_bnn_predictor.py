@@ -6,7 +6,7 @@ from allennlp.common.util import JsonDict
 from allennlp.data import Instance
 from allennlp.predictors.predictor import Predictor
 
-@Predictor.register('discourse_bnn_classifier')
+@Predictor.register('discourse_bnn_predictor')
 class DiscourseBNNClassifierPredictor(Predictor):
     """"
     Predictor wrapper for the DiscourseBNNClassifier
