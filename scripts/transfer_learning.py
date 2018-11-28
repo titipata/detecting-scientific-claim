@@ -49,7 +49,7 @@ def flatten_dataset(df):
     """
     sentence_data = []
     for _, r in df.iterrows():
-        sentence_data.extend(list(zip(r.sentences, r.labels)))
+        sentence_data.extend(list(zip(r['sentences'], r['labels'])))
     flatten_df = pd.DataFrame(sentence_data, columns=['sentence', 'label'])
     return flatten_df
 

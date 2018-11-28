@@ -30,6 +30,7 @@ from allennlp.data import Instance
 from allennlp.data.dataset_readers import DatasetReader
 from allennlp.data.iterators import BucketIterator
 from allennlp.training.trainer import Trainer
+from allennlp.training.learning_rate_schedulers import LearningRateScheduler
 
 from allennlp.modules.token_embedders import Embedding
 from allennlp.modules.token_embedders.embedding import _read_embeddings_from_text_file
@@ -151,10 +152,11 @@ if __name__ == '__main__':
         feedforward_discourse,
         feedforward_claim
     )
-    optimizer = optim.SGD(model.parameters(), 
-                        lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="max", factor=0.5, patience=5)
+    lr_scheduler = LearningRateScheduler(lr_scheduler)
     iterator = BucketIterator(batch_size=64, 
-                            sorting_keys=[("sentence", "num_tokens")])
+                              sorting_keys=[("sentence", "num_tokens")])
     iterator.index_with(vocab)
 
     # train discourse model
@@ -163,6 +165,7 @@ if __name__ == '__main__':
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
+        learning_rate_scheduler=lr_scheduler,
         iterator=iterator,
         train_dataset=discourse_train_dataset,
         validation_dataset=discourse_validation_dataset,
@@ -178,6 +181,7 @@ if __name__ == '__main__':
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
+        learning_rate_scheduler=lr_scheduler,
         iterator=iterator,
         train_dataset=claim_train_dataset,
         validation_dataset=claim_validation_dataset,
@@ -193,6 +197,7 @@ if __name__ == '__main__':
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
+        learning_rate_scheduler=lr_scheduler,
         iterator=iterator,
         train_dataset=discourse_train_dataset,
         validation_dataset=discourse_validation_dataset,
@@ -208,6 +213,7 @@ if __name__ == '__main__':
     trainer = Trainer(
         model=model,
         optimizer=optimizer,
+        learning_rate_scheduler=lr_scheduler,
         iterator=iterator,
         train_dataset=claim_train_dataset,
         validation_dataset=claim_validation_dataset,

@@ -87,6 +87,10 @@ def parse_pubmed_xml(pmid):
 
 
 def check_text_input(text_input):
+    """
+    Check text input, if contains Pubmed URL, parse from Pubmed, 
+    if not use text input as an abstract
+    """
     if 'www.ncbi.nlm.nih.gov/pubmed/' in text_input or text_input.isdigit():
         pmid = ''.join(c for c in text_input if c.isdigit())
         article = parse_pubmed_xml(pmid)
