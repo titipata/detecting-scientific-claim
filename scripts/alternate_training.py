@@ -153,8 +153,8 @@ if __name__ == '__main__':
         feedforward_claim
     )
     optimizer = optim.Adam(model.parameters(), lr=0.001)
-    lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="max", factor=0.5, patience=5)
-    lr_scheduler = LearningRateScheduler(lr_scheduler)
+    lr_params = Params({"type": "reduce_on_plateau", "mode": "max", "factor": 0.5, "patience": 5})
+    lr_scheduler = LearningRateScheduler.from_params(optimizer, lr_params)
     iterator = BucketIterator(batch_size=64, 
                               sorting_keys=[("sentence", "num_tokens")])
     iterator.index_with(vocab)
