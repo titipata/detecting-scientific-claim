@@ -1,3 +1,4 @@
 from discourse.models.discourse_model import DiscourseClassifier
 from discourse.models.discourse_bnn_model import DiscourseBNNClassifier
 from discourse.models.discourse_crf_model import DiscourseCrfClassifier
+from discourse.models.alternate_model import DiscourseClaimClassifier, DiscourseClaimCrfClassifier
