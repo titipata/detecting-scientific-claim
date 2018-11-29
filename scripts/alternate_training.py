@@ -160,7 +160,10 @@ if __name__ == '__main__':
                               sorting_keys=[("sentence", "num_tokens")])
     iterator.index_with(vocab)
 
-    for (l, n_classes, num_epochs, patience) in [(discourse_dict, 5, 20, 2), (claim_dict, 2, 20, 2), (discourse_dict, 5, 10, 2), (claim_dict, 2, 20, 2)]:
+    for (l, train_dataset, validation_dataset, n_classes, num_epochs, patience) in [(discourse_dict, discourse_train_dataset, discourse_validation_dataset, 5, 20, 2), 
+                                                                                    (claim_dict, claim_train_dataset, claim_validation_dataset, 2, 20, 2), 
+                                                                                    (discourse_dict, discourse_train_dataset, claim_validation_dataset, 5, 10, 2), 
+                                                                                    (claim_dict, claim_train_dataset, claim_validation_dataset, 2, 20, 2)]:
         model.vocab._token_to_index['labels'] = l
         model.num_classes = n_classes
         trainer = Trainer(
@@ -168,8 +171,8 @@ if __name__ == '__main__':
             optimizer=optimizer,
             learning_rate_scheduler=lr_scheduler,
             iterator=iterator,
-            train_dataset=discourse_train_dataset,
-            validation_dataset=discourse_validation_dataset,
+            train_dataset=train_dataset,
+            validation_dataset=validation_dataset,
             patience=patience,
             num_epochs=num_epochs, 
             cuda_device=0
