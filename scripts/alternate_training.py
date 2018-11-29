@@ -3,7 +3,7 @@ Script for alternate training
 """
 from typing import Iterator, List, Dict, Optional
 import json
-import pandas as pd
+import numpy as np
 from itertools import chain
 from overrides import overrides
 from sklearn.model_selection import train_test_split
@@ -160,67 +160,20 @@ if __name__ == '__main__':
                               sorting_keys=[("sentence", "num_tokens")])
     iterator.index_with(vocab)
 
-    # train discourse model
-    model.vocab._token_to_index['labels'] = discourse_dict
-    model.num_classes = 5
-    trainer = Trainer(
-        model=model,
-        optimizer=optimizer,
-        learning_rate_scheduler=lr_scheduler,
-        iterator=iterator,
-        train_dataset=discourse_train_dataset,
-        validation_dataset=discourse_validation_dataset,
-        patience=2,
-        num_epochs=20, 
-        cuda_device=0
-    )
-    trainer.train()
-
-    # train claim model
-    model.vocab._token_to_index['labels'] = claim_dict
-    model.num_classes = 2
-    trainer = Trainer(
-        model=model,
-        optimizer=optimizer,
-        learning_rate_scheduler=lr_scheduler,
-        iterator=iterator,
-        train_dataset=claim_train_dataset,
-        validation_dataset=claim_validation_dataset,
-        patience=2,
-        num_epochs=20,
-        cuda_device=0
-    )
-    trainer.train()
-
-    # train discourse model
-    model.vocab._token_to_index['labels'] = discourse_dict
-    model.num_classes = 5
-    trainer = Trainer(
-        model=model,
-        optimizer=optimizer,
-        learning_rate_scheduler=lr_scheduler,
-        iterator=iterator,
-        train_dataset=discourse_train_dataset,
-        validation_dataset=discourse_validation_dataset,
-        patience=2,
-        num_epochs=10, 
-        cuda_device=0
-    )
-    trainer.train()
-
-    # train claim model
-    model.vocab._token_to_index['labels'] = claim_dict
-    model.num_classes = 2
-    trainer = Trainer(
-        model=model,
-        optimizer=optimizer,
-        learning_rate_scheduler=lr_scheduler,
-        iterator=iterator,
-        train_dataset=claim_train_dataset,
-        validation_dataset=claim_validation_dataset,
-        patience=2,
-        num_epochs=20,
-        cuda_device=0
-    )
-    trainer.train()
+    for (l, n_classes, num_epochs, patience) in [(discourse_dict, 5, 20, 2), (claim_dict, 2, 20, 2), (discourse_dict, 5, 10, 2), (claim_dict, 2, 20, 2)]:
+        model.vocab._token_to_index['labels'] = l
+        model.num_classes = n_classes
+        trainer = Trainer(
+            model=model,
+            optimizer=optimizer,
+            learning_rate_scheduler=lr_scheduler,
+            iterator=iterator,
+            train_dataset=discourse_train_dataset,
+            validation_dataset=discourse_validation_dataset,
+            patience=patience,
+            num_epochs=num_epochs, 
+            cuda_device=0
+        )
+        trainer.train()
+    # save trained weight
     torch.save(model.state_dict(), './model_alternate_training.th')
