@@ -1,6 +1,8 @@
 """
 Script for alternate training
 """
+import sys
+sys.path.insert(0, '..')
 from typing import Iterator, List, Dict, Optional
 import json
 import numpy as np
