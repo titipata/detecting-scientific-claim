@@ -48,7 +48,7 @@
         <li>
 
         <!-- progress bar -->
-        <div class="leftBox">
+        <!-- <div class="leftBox">
           <div class="progress">
             <div class="progress-bar"
                 role="progressbar"
@@ -57,12 +57,12 @@
                 aria-valuemin="0"
                 aria-valuemax="100">
             </div>
-          </div>
+          </div> -->
           <!-- prediction value -->
-          <div class="centerValue">
+          <!-- <div class="centerValue">
             {{ '%0.2f' | format(score / 100) }}
           </div>
-        </div>
+        </div> -->
         <!-- splited sentence -->
         {% if score > 50 %}
         <div class="rightTxt" id="data-entity-{{label.lower()}}-dim">
