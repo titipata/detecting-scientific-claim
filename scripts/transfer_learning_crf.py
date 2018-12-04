@@ -26,6 +26,7 @@ from discourse.models import DiscourseClassifier
 
 from allennlp.models.archival import load_archive
 from allennlp.predictors import Predictor
+from allennlp.common import Params
 from allennlp.common.file_utils import cached_path
 
 from allennlp.data.fields import Field, TextField, LabelField, ListField, SequenceLabelField
@@ -37,6 +38,7 @@ from allennlp.data import Instance
 from allennlp.data.dataset_readers import DatasetReader
 from allennlp.data.iterators import BucketIterator, BasicIterator
 from allennlp.training.trainer import Trainer
+from allennlp.training.learning_rate_schedulers import LearningRateScheduler
 
 from allennlp.modules import Seq2VecEncoder, TimeDistributed, TextFieldEmbedder, ConditionalRandomField, FeedForward
 from torch.nn.modules.linear import Linear

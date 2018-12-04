@@ -21,6 +21,7 @@ from discourse.models import DiscourseClassifier
 
 from allennlp.models.archival import load_archive
 from allennlp.predictors import Predictor
+from allennlp.common import Params
 from allennlp.common.file_utils import cached_path
 from allennlp.common.util import JsonDict
 
@@ -33,9 +34,11 @@ from allennlp.data import Instance
 from allennlp.data.dataset_readers import DatasetReader
 from allennlp.data.iterators import BucketIterator
 from allennlp.training.trainer import Trainer
+from allennlp.training.learning_rate_schedulers import LearningRateScheduler
 
 
-EMBEDDING_DIM = 200
+
+EMBEDDING_DIM = 300
 DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model.tar.gz'
 TRAIN_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/train_labels.csv'
 VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/validation_labels.csv'
@@ -69,7 +72,8 @@ if __name__ == '__main__':
     # freeze all parameters
     for param in list(model.parameters()):
         param.requires_grad = False
-    model.classifier_feedforward._linear_layers = ModuleList([torch.nn.Linear(600, 300), torch.nn.Linear(300, 2)])
+    model.classifier_feedforward._linear_layers = ModuleList([torch.nn.Linear(2 * EMBEDDING_DIM, EMBEDDING_DIM), 
+                                                              torch.nn.Linear(EMBEDDING_DIM, 2)])
     vocab = predictor._model.vocab
     vocab._token_to_index['labels'] = {'0': 0, '1': 1}
     # freeze all layers except top layer
@@ -111,7 +115,6 @@ if __name__ == '__main__':
     for param in list(model.parameters())[1:]:
         param.requires_grad = True
     trainer.train()
-
 
     claim_predictor = ClaimClassifierPredictor(model, dataset_reader=reader)
     validation_df = pd.read_csv(cached_path(VALIDATION_PATH))
