@@ -23,13 +23,6 @@
         "hidden_size": 200,
         "num_layers": 1,
         "dropout": 0.2
-      },
-      "classifier_feedforward": {
-        "input_dim": 400,
-        "num_layers": 2,
-        "hidden_dims": [400, 5],
-        "activations": ["relu", "linear"],
-        "dropout": [0.3, 0.0]
       }
     },
     "iterator": {

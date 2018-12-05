@@ -23,8 +23,8 @@ class DiscourseCrfClassifier(Model):
                  vocab: Vocabulary,
                  text_field_embedder: TextFieldEmbedder,
                  sentence_encoder: Seq2VecEncoder,
-                 classifier_feedforward: FeedForward,
                  initializer: InitializerApplicator = InitializerApplicator(),
+                 dropout: Optional[float] = None,
                  regularizer: Optional[RegularizerApplicator] = None, 
                  label_smoothing: float = None) -> None:
         super(DiscourseCrfClassifier, self).__init__(vocab, regularizer)
@@ -32,7 +32,10 @@ class DiscourseCrfClassifier(Model):
         self.text_field_embedder = text_field_embedder
         self.num_classes = self.vocab.get_vocab_size("labels")
         self.sentence_encoder = sentence_encoder
-        self.classifier_feedforward = classifier_feedforward
+        if dropout:
+            self.dropout = torch.nn.Dropout(dropout)
+        else:
+            self.dropout = None
         self.metrics = {
             "accuracy": CategoricalAccuracy(),
             "accuracy3": CategoricalAccuracy(top_k=3)
@@ -41,8 +44,6 @@ class DiscourseCrfClassifier(Model):
         self.label_projection_layer = TimeDistributed(Linear(self.sentence_encoder.get_output_dim(), 
                                                              self.num_classes))
         
-        labels = self.vocab.get_index_to_token_vocabulary("labels")
-        label_encoding = None
         constraints = None # allowed_transitions(label_encoding, labels)
         self.crf = ConditionalRandomField(
             self.num_classes, constraints,
@@ -68,6 +69,10 @@ class DiscourseCrfClassifier(Model):
         for i in range(n_sents):
             encoded_sentences.append(self.sentence_encoder(embedded_sentences[:, i, :, :], token_masks[:, i, :]))
         encoded_sentences = torch.stack(encoded_sentences, 1)
+
+        # dropout layer
+        if self.dropout:
+            encoded_sentences = self.dropout(encoded_sentences)
 
         # print(encoded_sentences.size()) # size: (n_batch, n_sents, n_embedding)
 
