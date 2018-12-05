@@ -24,11 +24,11 @@
       "num_layers": 1,
       "dropout": 0.2
     },
-    "dropout": 0.25
+    "dropout": 0.25, 
+    "regularizer": [
+      ["transitions$", {"type": "l2", "alpha": 0.01}]
+    ],
   },
-  "regularizer": [
-    ["transitions$", {"type": "l2", "alpha": 0.01}]
-  ],
   "iterator": {
     "type": "basic",
     "batch_size": 64

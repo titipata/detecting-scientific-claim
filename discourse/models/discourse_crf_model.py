@@ -25,8 +25,7 @@ class DiscourseCrfClassifier(Model):
                  sentence_encoder: Seq2VecEncoder,
                  initializer: InitializerApplicator = InitializerApplicator(),
                  dropout: Optional[float] = None,
-                 regularizer: Optional[RegularizerApplicator] = None, 
-                 label_smoothing: float = None) -> None:
+                 regularizer: Optional[RegularizerApplicator] = None) -> None:
         super(DiscourseCrfClassifier, self).__init__(vocab, regularizer)
 
         self.text_field_embedder = text_field_embedder
