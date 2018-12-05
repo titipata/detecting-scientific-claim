@@ -1,0 +1,76 @@
+{
+    "dataset_reader": {
+      "type": "pubmed_rct", 
+      "token_indexers": {
+        "tokens": {
+          "type": "single_id",
+          "lowercase_tokens": true
+        },
+        "token_characters": {
+          "type": "characters"
+        }
+      }
+    },
+    "train_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/train.json",
+    "validation_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/dev.json",
+    "test_data_path": "https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json",
+    "evaluate_on_test": true,
+    "model": {
+      "type": "discourse_classifier",
+      "text_field_embedder": {
+        "tokens": {
+          "type": "embedding",
+          "pretrained_file": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/glove/glove.840B.300d.txt.gz",
+          "embedding_dim": 300,
+          "trainable": false
+        }, 
+        "token_characters": {
+            "type": "character_encoding",
+            "embedding": {
+              "embedding_dim": 25
+            },
+            "encoder": {
+              "type": "gru",
+              "input_size": 25,
+              "hidden_size": 80,
+              "num_layers": 2,
+              "dropout": 0.25,
+              "bidirectional": true
+            }
+          }
+      },
+      "sentence_encoder": {
+        "type": "lstm",
+        "bidirectional": true,
+        "input_size": 460,
+        "hidden_size": 460,
+        "num_layers": 1,
+        "dropout": 0.2
+      },
+      "regularizer": [
+        ["transitions$", {"type": "l2", "alpha": 0.01}]
+      ],
+      "classifier_feedforward": {
+        "input_dim": 920,
+        "num_layers": 2,
+        "hidden_dims": [500, 5],
+        "activations": ["relu", "linear"],
+        "dropout": [0.3, 0.0]
+      }
+    },
+    "iterator": {
+      "type": "bucket",
+      "sorting_keys": [["sentence", "num_tokens"]],
+      "batch_size": 64
+    },
+    "trainer": {
+      "num_epochs": 40,
+      "patience": 10,
+      "cuda_device": 0,
+      "grad_clipping": 5.0,
+      "validation_metric": "+accuracy",
+      "optimizer": {
+        "type": "adam"
+      }
+    }
+  }
