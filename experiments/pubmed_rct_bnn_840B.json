@@ -37,7 +37,7 @@
       "bidirectional": true,
       "input_size": 1800,
       "hidden_size": 300,
-      "num_layers": 1,
+      "num_layers": 1
     },
     "integrator_dropout": 0.1,
     "output_layer": {

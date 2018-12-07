@@ -27,7 +27,7 @@
     "dropout": 0.25, 
     "regularizer": [
       ["transitions$", {"type": "l2", "alpha": 0.01}]
-    ],
+    ]
   },
   "iterator": {
     "type": "basic",
