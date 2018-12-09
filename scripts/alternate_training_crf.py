@@ -163,9 +163,9 @@ if __name__ == '__main__':
     discourse_train_dataset = discourse_reader.read(cached_path(DISCOURSE_TRAIN_PATH))
     discourse_validation_dataset = discourse_reader.read(cached_path(DISCOURSE_VALIDATION_PATH))
     vocab = Vocabulary.from_instances(claim_train_dataset + \
-                                    claim_validation_dataset + \
-                                    discourse_train_dataset + \
-                                    discourse_validation_dataset)
+                                      claim_validation_dataset + \
+                                      discourse_train_dataset + \
+                                      discourse_validation_dataset)
     discourse_dict = {'RESULTS': 0, 'METHODS': 1, 'CONCLUSIONS': 2, 'BACKGROUND': 3, 'OBJECTIVE': 4}
     claim_dict = {'0': 0, '1': 1}
     embedding_matrix = _read_embeddings_from_text_file(file_uri=PUBMED_PRETRAINED_FILE, 

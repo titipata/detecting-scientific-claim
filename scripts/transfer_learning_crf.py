@@ -72,7 +72,7 @@ if __name__ == '__main__':
     model.classifier_feedforward._linear_layers = ModuleList([torch.nn.Linear(2 * EMBEDDING_DIM, EMBEDDING_DIM), 
                                                               torch.nn.Linear(EMBEDDING_DIM, num_classes)])
     model.crf = ConditionalRandomField(num_classes, constraints, 
-                                    include_start_end_transitions=include_start_end_transitions)
+                                       include_start_end_transitions=include_start_end_transitions)
     model.label_projection_layer = TimeDistributed(Linear(2 * EMBEDDING_DIM, num_classes))
 
     reader = ClaimAnnotationReaderJSON()
