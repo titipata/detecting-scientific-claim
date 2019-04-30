@@ -92,7 +92,7 @@ def tweet_biorxiv_claim():
     # get publications from biorxiv
     publications = client.read(['all'])
     for publication in publications:
-        title = publication['title']
+        # title = publication['title']
         abstract = publication['summary']
         abstract = clean_abstract(abstract)
         if publication['id'] not in biorxiv_urls:
@@ -101,9 +101,10 @@ def tweet_biorxiv_claim():
             pred = claim_predictor.predict_json({'sentences': sentences})
             best_paths = model.crf.viterbi_tags(torch.FloatTensor(pred['logits']).unsqueeze(0), 
                                                 torch.LongTensor(pred['mask']).unsqueeze(0))
-            last_claim_sentence = [s for s, p in zip(sentences, best_paths[0][0]) if int(p) == 1]
-            if len(last_claim_sentence) >= 1:
-                tweet_text = last_claim_sentence[-1] + ' ' + publication['id']
+            claim_sentences = [s for s, p in zip(sentences, best_paths[0][0]) if int(p) == 1]
+            if len(claim_sentences) >= 1:
+                claim_sentence = claim_sentences[-1]
+                tweet_text = claim_sentence[0: 230] + ' -- claim extracted from ' + publication['id']
                 print(tweet_text)
                 # api.PostUpdate(tweet_text)
             biorxiv_urls.append(publication['id'])
