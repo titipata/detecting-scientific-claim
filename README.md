@@ -1,12 +1,12 @@
 # Claim Extraction for Scientific Publications
 
-Detecting claim from scientific publication using discourse and sentence embedding 
-powered by [AllenNLP](https://github.com/allenai/allennlp).
+Detecting claim from scientific publication using [discourse model](https://github.com/Franck-Dernoncourt/pubmed-rct) and transfer learning. 
+Models are trained using [AllenNLP](https://github.com/allenai/allennlp) library.
 
 
 ## Training discourse model
 
-Running AllenNLP to train a discourse model as follows
+Running AllenNLP to train a discourse model using [PubmMedRCT dataset](https://github.com/Franck-Dernoncourt/pubmed-rct) as follows
 
 ```bash
 allennlp train experiments/pubmed_rct.json -s output --include-package discourse
@@ -86,9 +86,9 @@ And output will look something like the following (highlight means claim,
 </p>
 
 
-We release the dataset of annotated 1,500 abstracts containing 11,702 sentences (2,276 annotated as claim sentences) 
+**Expertly annotated dataset** We release the dataset of annotated 1,500 abstracts containing 11,702 sentences (2,276 annotated as claim sentences) 
 sampled from 110 biomedical journals. The final dataset are the majority vote from three experts. The annotations are hosted on Amazon S3 and 
-can be found from these giving [URLs](https://github.com/titipata/detecting-scientific-claim/blob/master/scripts/transfer_learning_crf.py#L48-L50).
+can be found from these given [URLs](https://github.com/titipata/detecting-scientific-claim/blob/master/scripts/transfer_learning_crf.py#L48-L50).
 
 
 ## Requirements
