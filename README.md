@@ -39,26 +39,26 @@ To test the train model with provided examples [`fixtures.json`](pubmed-rct/PubM
 simply run the following to predict labels.
 
 ```bash
-allennlp predict output/model.tar.gz \
+allennlp predict model.tar.gz \
     pubmed-rct/PubMed_200k_RCT/fixtures.json \
     --include-package discourse \
-    --predictor discourse_classifier
+    --predictor discourse_predictor
 ```
 
 or run the following for 
 
 ```
-allennlp predict output/model_crf.tar.gz \
+allennlp predict model_crf.tar.gz \
     pubmed-rct/PubMed_200k_RCT/fixtures_crf.json \
     --include-package discourse \
-    --predictor discourse_crf_classifier
+    --predictor discourse_crf_predictor
 ```
 
 To evaluate discourse model, you can run the following command
 
 ```bash
-allennlp evaluate output/model.tar.gz \
-  --evaluation-data-file https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json \
+allennlp evaluate model.tar.gz \
+  https://s3-us-west-2.amazonaws.com/pubmed-rct/test.json \
   --include-package discourse
 ```
 
