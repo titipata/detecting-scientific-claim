@@ -69,7 +69,7 @@ We use transfer learning with fine tuning to train claim extraction model
 from pre-trained discourse model. The schematic of the training can be seen below.
 
 <p float="left">
-  <img src="static/transfer_learning.png" width="600" />
+  <img src="static/transfer_learning.png" width="400" />
 </p>
 
 You can run the demo web application to detect claims as follows
