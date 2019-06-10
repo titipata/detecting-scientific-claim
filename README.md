@@ -86,8 +86,9 @@ And output will look something like the following (highlight means claim,
 </p>
 
 
-We will release a dataset and model of scientific claims tagged by expert soon
-(in a coming months).
+We release the dataset of annotated 1,500 abstracts containing 11,702 sentences (2,276 annotated as claim sentences) 
+sampled from 110 biomedical journals. The final dataset are the majority vote from three experts. The annotations are hosted on Amazon S3 and 
+can be found from these giving [URLs](https://github.com/titipata/detecting-scientific-claim/blob/master/scripts/transfer_learning_crf.py#L48-L50).
 
 
 ## Requirements
