@@ -65,7 +65,14 @@ allennlp evaluate model.tar.gz \
 
 ## Predicting claim (web service)
 
-You can run the web application to detect claims as follows
+We use transfer learning with fine tuning to train claim extraction model 
+from pre-trained discourse model. The schematic of the training can be seen below.
+
+<p float="left">
+  <img src="static/transfer_learning.png" width="600" />
+</p>
+
+You can run the demo web application to detect claims as follows
 
 ```bash
 export FLASK_APP=main.py
