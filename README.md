@@ -109,23 +109,18 @@ can be found from these given [URLs](https://github.com/titipata/detecting-scien
 
 ## Citing the repository
 
-We do not have the publication related to the repository yet. You can cite the
-Github repository for now:
+You can cite our paper available on arXiv as
 
-
-Titipat Achakulvisut, Chandra Bhagavatula, Daniel E Acuna, Konrad P Kording, _Claim Extraction for Scientific Publications_,
-https://github.com/titipata/detecting-scientific-claim, 2018
+Achakulvisut, Titipat, Chandra Bhagavatula, Daniel Acuna, and Konrad Kording. _"Claim Extraction in Biomedical Publications using Deep Discourse Model and Transfer Learning."_ arXiv preprint arXiv:1907.00962 (2019).
 
 or using BibTeX
 
 ```
-@misc{Achakulvisut2018,
-  author = {Achakulvisut T, Bhagavatula C, Acuna DE, Kording KP},
-  title = {Claim Extraction for Scientific Publications},
-  year = {2018},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/titipata/detecting-scientific-claim}}
+@article{achakulvisut2019claim,
+  title={Claim Extraction in Biomedical Publications using Deep Discourse Model and Transfer Learning},
+  author={Achakulvisut, Titipat and Bhagavatula, Chandra and Acuna, Daniel and Kording, Konrad},
+  journal={arXiv preprint arXiv:1907.00962},
+  year={2019}
 }
 ```
 
