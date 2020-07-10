@@ -34,8 +34,8 @@ from discourse.predictors import DiscourseClassifierPredictor
 TESTING = False # if true, run testing
 EMBEDDING_DIM = 300
 PUBMED_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=%s'
-DISCOURSE_MODEL_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf.tar.gz'
-WEIGHT_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/model_crf_tf.th'
+DISCOURSE_MODEL_PATH = 'https://detecting-scientific-claim.s3-us-west-2.amazonaws.com/model.tar.gz'
+WEIGHT_PATH = 'https://detecting-scientific-claim.s3-us-west-2.amazonaws.com/model_crf_tf.th'
 
 
 class ClaimCrfPredictor(Predictor):
