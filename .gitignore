@@ -135,3 +135,6 @@ medline/*
 model.tar.gz
 wiki.en.bin
 labels.json
+
+# Vscode
+.vscode/
