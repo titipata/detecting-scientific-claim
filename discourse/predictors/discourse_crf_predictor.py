@@ -6,7 +6,13 @@ from allennlp.common.util import JsonDict
 from allennlp.data import Instance
 from allennlp.predictors.predictor import Predictor
 
-nlp = spacy.load('en_core_web_sm')
+try:
+    nlp = spacy.load('en_core_web_sm')
+except Exception:
+    from spacy.cli import download
+    download("en_core_web_sm")
+    npl = spacy.load("en_core_web_sm")
+
 
 @Predictor.register('discourse_crf_predictor')
 class DiscourseCRFClassifierPredictor(Predictor):

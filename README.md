@@ -3,6 +3,20 @@
 Detecting claim from scientific publication using [discourse model](https://github.com/Franck-Dernoncourt/pubmed-rct) and transfer learning. 
 Models are trained using [AllenNLP](https://github.com/allenai/allennlp) library.
 
+## Installing as a package
+
+You can install the package using PIP, which will help you use the `discourse` classes inside a module
+
+```bash
+pip install git+https://github.com/titipata/detecting-scientific-claim.git
+```
+
+you will be able to use them as
+
+```python
+import discourse
+predictor = discourse.DiscourseCRFClassifierPredictor()
+```
 
 ## Training discourse model
 
