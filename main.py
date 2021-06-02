@@ -89,7 +89,7 @@ def check_text_input(text_input):
     Check text input, if contains Pubmed URL, parse from Pubmed, 
     if not use text input as an abstract
     """
-    if 'www.ncbi.nlm.nih.gov/pubmed/' in text_input or text_input.isdigit():
+    if 'www.ncbi.nlm.nih.gov/pubmed/' in text_input.lower() or 'pubmed.ncbi.nlm.nih.gov' in text_input.lower() or text_input.isdigit():
         pmid = ''.join(c for c in text_input if c.isdigit())
         article = parse_pubmed_xml(pmid)
     else:
@@ -162,5 +162,5 @@ def index():
 
 
 if __name__ == "__main__":
-    http_server = WSGIServer(('0.0.0.0', 5000), app)
+    http_server = WSGIServer(('0.0.0.0', 5001), app)
     http_server.serve_forever()
